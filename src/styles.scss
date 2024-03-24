@@ -77,6 +77,11 @@ input {
   &:disabled {
     cursor: not-allowed;
     opacity: 1;
+    color: #a1a1a1;
+  }
+
+  &::placeholder {
+    color: #bfece59c;
   }
 }
 
@@ -117,17 +122,16 @@ input {
 
   .tokens-needed-img {
     position: absolute;
-    width: 80px;
-    left: -20px;
-    top: -20px;
+    width: 150px;
+    left: -32px;
+    bottom: -80px;
   }
+}
 
-  .tokens-needed-solpad-img {
-    position: absolute;
-    width: 80px;
-    right: -10px;
-    bottom: -20px;
-  }
+.grou-doble {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
 }
 
 .group-content {
@@ -139,6 +143,7 @@ input {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 
   &.solpad {
     justify-content: space-between;

@@ -65,7 +65,6 @@ export class PresaleComponent implements OnInit, OnDestroy {
   tokenomics: Tokenomics = new Tokenomics();
   subscription: Subscription[] = [];
   solValueApi: number = 0.0;
-  solPricePerToken = 0;
   burned = 0;
   valueUnloked = 0;
   solValueTotal = 0;
@@ -76,6 +75,7 @@ export class PresaleComponent implements OnInit, OnDestroy {
   valueTokenomics: number;
   oldMcap: number;
   oldLprice: number;
+  oldSolPricePerToken: number;
 
   @ViewChild('chart') chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
@@ -86,7 +86,6 @@ export class PresaleComponent implements OnInit, OnDestroy {
     private functionService: FunctionService,
     private localStorageService: LocalStorageService
   ) {
-    this.teste();
     this.subscription.push(
       this.functionService.cryotoValue$.subscribe((ret) => {
         if (ret) {
@@ -152,10 +151,20 @@ export class PresaleComponent implements OnInit, OnDestroy {
           this.presale.LiquidityPercentage) /
           100 || 0;
 
+    this.presale.TotalTokensNeededOnePercentageSolpad =
+      this.presale.TotalTokensNeeded +
+      this.presale.TotalTokensNeeded * (1 / 100);
+
     this.calcIsWork();
     this.calcTotalSol();
     this.setListTokenomics();
     this.onCalcTotalDollarsInLiquidity();
+  }
+
+  onCalcTokensForSolPad() {
+    this.presale.TokensForSolPad =
+      this.presale.TotalTokensNeededOnePercentageSolpad *
+      ((this.presale.TransferFee + 1) / 100);
   }
 
   calcIsWork() {
@@ -165,9 +174,17 @@ export class PresaleComponent implements OnInit, OnDestroy {
       (this.presale.TotalTokensNeeded / this.presale.TotalSupply) * 100 || 0;
   }
 
-  calcSolPricePerToken() {
+  onCalcSolPricePerToken() {
     if (this.presale.ListingPrice > 0) {
-      this.solPricePerToken = this.solValueApi / this.presale.ListingPrice || 0;
+      console.log(this.solValueApi);
+      console.log(this.presale.ListingPrice);
+
+      this.presale.SolPricePerToken =
+        this.solValueApi / this.presale.ListingPrice;
+
+      console.log(this.presale.SolPricePerToken);
+
+      this.oldSolPricePerToken = this.presale.SolPricePerToken;
     }
   }
 
@@ -277,10 +294,6 @@ export class PresaleComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSetSol() {
-    this.onCalcTotalTokensForPresale();
-  }
-
   onCalcTotalDollarsInLiquidity() {
     if (
       this.solValueApi > 0 &&
@@ -292,7 +305,7 @@ export class PresaleComponent implements OnInit, OnDestroy {
         this.presale.TotalSolForLiquidity * this.solValueApi;
 
       this.onCalcMcap();
-      this.calcSolPricePerToken();
+      this.onCalcSolPricePerToken();
     }
   }
 
@@ -306,11 +319,19 @@ export class PresaleComponent implements OnInit, OnDestroy {
     this.oldMcap = this.presale.Mcap;
   }
 
-  teste() {
+  onCalcChangeMcap() {
     this.presale.ListingPrice =
       (this.oldLprice / this.presale.Mcap) * this.oldMcap;
 
-    this.presale.PresalePrice = this.presale.ListingPrice;
+    //this.presale.PresalePrice = this.presale.ListingPrice;
+
+    this.onCalcTotalTokensForPresale();
+  }
+
+  onCalcChangePriceAtLaunch() {
+    this.presale.ListingPrice =
+      (this.oldLprice / this.presale.SolPricePerToken) *
+      this.oldSolPricePerToken;
 
     this.onCalcTotalTokensForPresale();
   }

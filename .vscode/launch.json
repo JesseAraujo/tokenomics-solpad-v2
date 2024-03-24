@@ -1,0 +1,14 @@
+{
+   "version": "0.2.0",
+   "configurations": [
+      {
+         "name": "ERP",
+         "port": 9222,
+         "request": "attach",
+         "type": "pwa-chrome",
+         "restart": true,
+         "urlFilter": "http://localhost:4200/*",
+         "webRoot": "${workspaceFolder}"
+      }
+   ]
+}

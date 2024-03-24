@@ -1,0 +1,10 @@
+{
+   "recommendations": [
+      "angular.ng-template",
+      "johnpapa.angular2",
+      "formulahendry.auto-rename-tag",
+      "esbenp.prettier-vscode",
+      "ms-vscode.vscode-typescript-tslint-plugin",
+      "ue.alphabetical-sorter"
+   ]
+}
