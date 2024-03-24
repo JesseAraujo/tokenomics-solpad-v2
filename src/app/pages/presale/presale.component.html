@@ -1,0 +1,212 @@
+<div class="group-sol">
+  <img src="assets/img/logo-solano.png" alt="" />
+  <div class="group-sol__sol">
+    $SOL
+    <div class="group-sol__sol--value">
+      ${{solValueApi | number : "1.2-2"}}
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="group-inputs-views">
+    <div class="group-input">
+      <div class="input">
+        <p>Total Supply</p>
+        <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.TotalSupply" placeholder="000 000 000"
+          (change)="onCalcTotalTokensForLiquidity()" currencyMask
+          [options]="{ precision: 0, decimal: '', align: 'left' }" />
+      </div>
+      <div class="input">
+        <p>Hard Cap</p>
+        <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.Hardcap" placeholder="000 000 000"
+          (blur)="onCalcTotalTokensForPresale()" currencyMask
+          [options]="{ precision: 0, decimal: '', align: 'left' }" />
+      </div>
+      <div class="input">
+        <p>Presale Price</p>
+        <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.PresalePrice" placeholder="000 000 000"
+          (blur)="onCalcTotalTokensForPresale()" currencyMask
+          [options]="{ precision: 0, decimal: '', align: 'left' }" />
+      </div>
+      <div class="input">
+        <p>Listing Price</p>
+        <input type="text" OnlyNumbers inputmode="numeric" [(ngModel)]="presale.ListingPrice" placeholder="000 000 000"
+          (blur)="onCalcTotalTokensForLiquidity()" currencyMask
+          [options]="{ precision: 0, decimal: '', align: 'left' }" />
+      </div>
+      <div class="group-input-checkbox">
+        <div class="input">
+          <p>Liquidity Percent %</p>
+          <input type="text" inputmode="numeric" [(ngModel)]="presale.LiquidityPercentage" placeholder="0.00"
+            (blur)="onCalcTotalTokensForLiquidity()" currencyMask />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="group-content">
+  <div class="content">
+    <div class="group-view">
+      <div class="group-view__title">Initial Market Cap</div>
+      <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.Mcap" (blur)="teste()" placeholder="0.00"
+        currencyMask [options]="{ precision: 2, decimal: '.', align: 'right', prefix: '$' }" />
+    </div>
+  </div>
+  <div class="content">
+    <div class="group-view">
+      <div class="group-view__title">Price at launch</div>
+      <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.SolPricePerToken" placeholder="0.00"
+        currencyMask [options]="{ precision: 2, decimal: '.', align: 'right', prefix: '$' }" />
+    </div>
+  </div>
+  <div class="content">
+    <div class="group-view">
+      <div class="group-view__title">Transfer fee</div>
+      <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.TransferFee" placeholder="0.00"
+        currencyMask [options]="{ precision: 2, decimal: '.', align: 'right', prefix: '$' }" />
+    </div>
+  </div>
+</div>
+
+<div class="group-content">
+  <div class="check-works">
+    <div class="check-works__title">Check if it works or not</div>
+    <div class="check-works__value" [ngClass]="presale.IsWork > 0 ? 'yes' : 'no'">This doesnt work...</div>
+  </div>
+  <div class="content">
+    <div class="group-view">
+      <div class="group-view__title">Percentage you will use of the total supply</div>
+      <div class="group-view__value">{{
+        presale.YouWillUseHowManyTotalSupply | number : "1.2-2" }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <img class="tokens-needed-img" src="assets/img/solana-sol-logo.png" loading="lazy" alt="" srcset="">
+  <div class="group-view">
+    <div class="group-view__title" style="margin-left: 50px;">Total tokens needed to create a SolPad Pool</div>
+    <div class="group-view__value">{{ formatNumber(presale.TotalTokensNeeded.toLocaleString("en-US")) }}</div>
+  </div>
+</div>
+
+<div class="group-content">
+  <div class="content">
+    <div class="group-view">
+      <div class="group-view__title">Total Tokens for Presale</div>
+      <div class="group-view__value">{{ formatNumber(presale.TotalTokensForPresale.toLocaleString("en-US")) }}</div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="group-view">
+      <div class="group-view__title">Soft Cap</div>
+      <div class="group-view__value">{{ formatNumber(presale.SoftCap.toLocaleString("en-US")) }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="group-content">
+  <div class="content">
+    <div class="group-view">
+      <div class="group-view__title">Total Tokens for Liquidity</div>
+      <div class="group-view__value">{{ formatNumber(presale.TotalTokensForLiquidity.toLocaleString("en-US")) }}</div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="group-view">
+      <div class="group-view__title">Token fee</div>
+      <div class="group-view__value">{{ formatNumber(presale.TokenFee.toLocaleString("en-US")) }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <img class="tokens-needed-solpad-img" src="assets/img/solana-sol-logo.png" loading="lazy" alt="" srcset="">
+  <div class="group-view">
+    <div class="group-view__title">Total tokens needed to create a SolPad Pool (1% SolPad)
+    </div>
+    <div class="group-view__value" style="margin-right: 60px;">{{
+      formatNumber(presale.TotalTokensNeededOnePercentageSolpad.toLocaleString("en-US"))
+      }}</div>
+  </div>
+</div>
+
+<div class="group-content">
+  <div class="content">
+    <div class="group-view solpad">
+      <div class="group-view__title">Tokens for SolPad 1%</div>
+      <div class="group-view__value">{{ formatNumber(presale.TokensForSolPad.toLocaleString("en-US")) }}</div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="group-view solpad">
+      <div class="group-view__title">Total $SOL going to the Owner Wallet</div>
+      <div class="group-view__value">{{ formatNumber(presale.TotalSolOwnerWallet.toLocaleString("en-US")) }}</div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="group-view solpad">
+      <div class="group-view__title">Total $SOL for liquidity</div>
+      <div class="group-view__value">{{ formatNumber(presale.TotalSolForLiquidity.toLocaleString("en-US")) }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="title">
+  Tokenomics
+  <div class="title__contrast">Metrics</div>
+</div>
+
+<div class="group-content">
+  <div class="group-add-metrics">
+    <div class="content">
+      <div class="group-new-tokenomics">
+        <div class="input">
+          <p>Name</p>
+          <input type="text" [(ngModel)]="nameTokenomics" placeholder="Name Tokenomics" />
+        </div>
+        <div class="input">
+          <p>Value %</p>
+          <input currencyMask type="text" inputmode="numeric" [(ngModel)]="valueTokenomics" placeholder="0.00" />
+        </div>
+        <button type="button" class="btn-add" [ngClass]="{
+            disabled:
+              !nameTokenomics || !valueTokenomics || valueTokenomics === 0
+          }" [disabled]="
+            !nameTokenomics || !valueTokenomics || valueTokenomics === 0
+          " (click)="onSetNewTokenomicsClick(nameTokenomics, valueTokenomics)">
+          <img src="assets/img/more.svg" alt="" srcset="" />
+        </button>
+      </div>
+    </div>
+    <div class="list-tokenomics" *ngFor="let item of presale.ListTokenomics">
+      <div class="list-tokenomics__color" [style.backgroundColor]="item.Color"></div>
+      <div class="list-tokenomics__name">{{ item.Name }}</div>
+      <div class="list-tokenomics__value" *ngIf="!item.IsEditable">
+        {{ item.Value | number : "1.2-7" }}%
+      </div>
+      <div class="list-tokenomics__value" *ngIf="item.IsEditable">
+        <div class="input">
+          <input currencyMask [options]="{ align: 'right' }" type="text" inputmode="numeric" [(ngModel)]="item.Value"
+            (blur)="onSetValueBlur(item, item.Value)" placeholder="0.00" [disabled]="
+              !presale.LiquidityPercentage ||
+              presale.LiquidityPercentage === 0
+            " />
+        </div>
+      </div>
+      <div class="list-tokenomics__value-sol">
+        {{ formatNumber(item.Sol!.toLocaleString("en-US")) }} $SOL
+      </div>
+    </div>
+  </div>
+  <div class="chart-pie">
+    In % of total supply
+    <div *ngIf="presale.ListTokenomics && presale.ListTokenomics.length > 0" id="chart">
+      <apx-chart [tooltip]="chartOptions.tooltip!" [series]="chartOptions.series!" [colors]="chartOptions.colors!"
+        [chart]="chartOptions.chart!" [plotOptions]="chartOptions.plotOptions!" [stroke]="chartOptions.stroke!"
+        [states]="chartOptions.states!" [labels]="chartOptions.labels!" [legend]="chartOptions.legend!"></apx-chart>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,140 @@
+<router-outlet></router-outlet>
+
+<!--
+<div class="container loading" *ngIf="isLoading">
+  <div class="contain-loading">
+    <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+
+<div class="container" *ngIf="!isLoading">
+  <header>
+    <div class="group-logo">
+      <a href="https://launchpad.solpad.io/" target="_blank"><img loading="lazy" src="assets/img/logoSolpad.svg"
+          alt="SolPad" width="80" />
+      </a>
+
+      <div class="group-buttons">
+
+      </div>
+    </div>
+
+    <div class="text-1">
+      Tokenomics Calculator & Metrics
+    </div>
+
+    <nav>
+      <button type="button" class="btn" [ngClass]="{ actived: stepTokenomics === 1 }"
+        (click)="handleSetStepTokenomics(1)">
+        PreSale
+      </button>
+      <button
+        type="button"
+        class="btn"
+        [ngClass]="{ actived: stepTokenomics === 2 }"
+        (click)="handleSetStepTokenomics(2)"
+      >
+        Presale WhiteList
+      </button>
+      <button
+        type="button"
+        class="btn"
+        [ngClass]="{ actived: stepTokenomics === 3 }"
+        (click)="handleSetStepTokenomics(3)"
+      >
+        Subscription
+      </button>
+      <button type="button" class="btn" [ngClass]="{ actived: stepTokenomics === 4 }"
+        (click)="handleSetStepTokenomics(4)">
+        Fair Launch
+      </button>
+    </nav>
+  </header>
+
+  <!-desk->
+  <aside>
+    <a href="https://launchpad.solpad.io/" target="_blank"><img loading="lazy" src="assets/img/logoSolpad.svg"
+        alt="SolPad" width="50" />
+    </a>
+
+    <div class="group-aside">
+      <div class="text-1">
+        Tokenomics Calculator & Metrics
+      </div>
+
+      <nav>
+        <button type="button" class="btn" [ngClass]="{ actived: stepTokenomics === 1 }"
+          (click)="handleSetStepTokenomics(1)">
+          PreSale
+          <app-popover [iconColor]="
+              stepTokenomics === 1
+                ? 'var(--color-button-actived)'
+                : 'var(--black)'
+            ">How to create PreSale</app-popover>
+        </button>
+        <button
+          type="button"
+          class="btn"
+          [ngClass]="{ actived: stepTokenomics === 2 }"
+          (click)="handleSetStepTokenomics(2)"
+        >
+          Presale WhiteList
+          <app-popover
+            [iconColor]="
+              stepTokenomics === 2
+                ? 'var(--color-button-actived)'
+                : 'var(--black)'
+            "
+            >How to Configure WhiteList
+            <a
+              href="https://docs.pinksale.finance/launchpads/add-remove-whitelists"
+              target="_blank"
+              >https://docs.pinksale.finance/launchpads/add-remove-whitelists</a
+            ></app-popover
+          >
+        </button>
+        <button
+          type="button"
+          class="btn"
+          [ngClass]="{ actived: stepTokenomics === 3 }"
+          (click)="handleSetStepTokenomics(3)"
+        >
+          Subscription
+          <app-popover
+            [iconColor]="
+              stepTokenomics === 3
+                ? 'var(--color-button-actived)'
+                : 'var(--black)'
+            "
+            >How to Create Subscription
+            <a
+              href="https://docs.pinksale.finance/subscription/create-a-subscription"
+              target="_blank"
+              >https://docs.pinksale.finance/subscription/create-a-subscription</a
+            ></app-popover
+          >
+        </button>
+        <button type="button" class="btn" [ngClass]="{ actived: stepTokenomics === 4 }"
+          (click)="handleSetStepTokenomics(4)">
+          Fair Launch
+          <app-popover [iconColor]="
+              stepTokenomics === 4
+                ? 'var(--color-button-actived)'
+                : 'var(--black)'
+            ">How to Create Fair Launch</app-popover>
+        </button>
+      </nav>
+
+
+    </div>
+  </aside>
+
+  <!-main->
+  <main>
+    <app-presale *ngIf="stepTokenomics === 1"></app-presale>
+    <<app-presale-whiteList *ngIf="stepTokenomics === 2"></app-presale-whiteList>
+    <app-subscription *ngIf="stepTokenomics === 3"></app-subscription>>
+    <app-fairlaunch *ngIf="stepTokenomics === 4"></app-fairlaunch>
+  </main>
+</div> -->
