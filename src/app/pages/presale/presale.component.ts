@@ -22,6 +22,7 @@ import { FunctionService } from 'src/app/core/services/function.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { Presale, Tokenomics } from 'src/app/model/presale';
 import { OnlyNumbersDirective } from 'src/app/shared/directives/only-numbers.directive';
+import { PopoverComponent } from 'src/app/shared/popover/popover.component';
 import { CustomCurrencyMaskConfig } from 'src/main';
 
 export type ChartOptions = {
@@ -51,6 +52,7 @@ export type ChartOptions = {
     OnlyNumbersDirective,
     CurrencyMaskModule,
     NgApexchartsModule,
+    PopoverComponent,
   ],
   providers: [
     {
@@ -176,13 +178,8 @@ export class PresaleComponent implements OnInit, OnDestroy {
 
   onCalcSolPricePerToken() {
     if (this.presale.ListingPrice > 0) {
-      console.log(this.solValueApi);
-      console.log(this.presale.ListingPrice);
-
       this.presale.SolPricePerToken =
-        this.solValueApi / this.presale.ListingPrice;
-
-      console.log(this.presale.SolPricePerToken);
+        this.presale.ListingPrice / this.solValueApi;
 
       this.oldSolPricePerToken = this.presale.SolPricePerToken;
     }
@@ -323,7 +320,7 @@ export class PresaleComponent implements OnInit, OnDestroy {
     this.presale.ListingPrice =
       (this.oldLprice / this.presale.Mcap) * this.oldMcap;
 
-    //this.presale.PresalePrice = this.presale.ListingPrice;
+    this.presale.PresalePrice = this.presale.ListingPrice;
 
     this.onCalcTotalTokensForPresale();
   }
@@ -332,6 +329,8 @@ export class PresaleComponent implements OnInit, OnDestroy {
     this.presale.ListingPrice =
       (this.oldLprice / this.presale.SolPricePerToken) *
       this.oldSolPricePerToken;
+
+    this.presale.PresalePrice = this.presale.ListingPrice;
 
     this.onCalcTotalTokensForPresale();
   }

@@ -1,0 +1,7 @@
+<div class="popover">
+  <i *ngIf="linkIcon" class="popover-icon fa fa-{{ linkIcon }}" aria-hidden="true" [ngStyle]="{ color: iconColor }"></i>
+  {{ linkText }}
+  <div class="popoverBody">
+    <ng-content></ng-content>
+  </div>
+</div>

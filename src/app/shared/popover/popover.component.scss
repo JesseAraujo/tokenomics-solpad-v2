@@ -1,0 +1,61 @@
+$text: #e0e0e0;
+$pink: #443692;
+
+.popover {
+  position: relative;
+  display: inline-block;
+  border: none;
+  box-shadow: none;
+  margin-left: 5px;
+
+  .popover-icon {
+    cursor: help;
+    font-size: 0.7rem;
+  }
+
+  &:hover {
+    .popoverBody {
+      display: block;
+    }
+  }
+}
+
+.popoverBody {
+  position: absolute;
+  display: none;
+  font-size: 0.83rem;
+  width: 250px;
+  background: $pink;
+  padding: 15px;
+  border-radius: 8px;
+  bottom: 100%;
+  left: 50%;
+  margin-bottom: 5px;
+  margin-left: -86px;
+  z-index: 9;
+  color: $text !important;
+  text-align: center;
+
+  &:after {
+    content: " ";
+    position: absolute;
+    top: 100%;
+    left: 10%;
+    margin-left: 52px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: $pink transparent transparent transparent;
+  }
+}
+
+@media screen and (max-width: 979px) {
+  .popoverBody {
+    width: 250px;
+    margin-left: -70px;
+  }
+
+  .popoverBody:after {
+    margin-left: -5px;
+    left: 25%;
+  }
+}
