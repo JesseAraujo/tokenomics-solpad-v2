@@ -13,33 +13,27 @@
     <div class="group-input">
       <div class="input">
         <p>Total Supply <app-popover>Total circulating tokens for your project</app-popover></p>
-        <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.TotalSupply" placeholder="000 000 000"
-          (change)="onCalcTotalTokensForLiquidity()" currencyMask
+        <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="fairLaunch.TotalSupply"
+          placeholder="000 000 000" (change)="onCalcTotalTokensForLiquidity()" currencyMask
           [options]="{ precision: 0, decimal: '', align: 'left' }" />
       </div>
       <div class="input">
-        <p>Hard Cap <app-popover>Maximum limit of $SOL filled to develop your project</app-popover></p>
-        <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.Hardcap" placeholder="000 000 000"
-          (blur)="onCalcTotalTokensForPresale()" currencyMask
+        <p> Total Tokens for Fair Launch <app-popover>How many tokens do you want to put up for sale at Fair
+            Launch?</app-popover></p>
+        <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="fairLaunch.TotalTokensForFairLaunch"
+          placeholder="000 000 000" (blur)="onCalcFairLaunchRate()" currencyMask
           [options]="{ precision: 0, decimal: '', align: 'left' }" />
       </div>
       <div class="input">
-        <p>Presale Price <app-popover>Token price in PreSale phase, 1 $SOL = How many tokens</app-popover></p>
-        <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.PresalePrice" placeholder="000 000 000"
-          (blur)="onCalcTotalTokensForPresale()" currencyMask
-          [options]="{ precision: 0, decimal: '', align: 'left' }" />
-      </div>
-      <div class="input">
-        <p>Listing Price <app-popover>Token price at launch, 1 $SOL = How many Token</app-popover></p>
-        <input type="text" OnlyNumbers inputmode="numeric" [(ngModel)]="presale.ListingPrice" placeholder="000 000 000"
-          (blur)="onCalcTotalTokensForLiquidity()" currencyMask
-          [options]="{ precision: 0, decimal: '', align: 'left' }" />
+        <p>Soft Cap <app-popover>Minimum value of $SOL filled to develop your project</app-popover></p>
+        <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="fairLaunch.SoftCap" placeholder="000 000 000"
+          (blur)="onCalcFairLaunchRate()" currencyMask [options]="{ precision: 0, decimal: '', align: 'left' }" />
       </div>
       <div class="group-input-checkbox">
         <div class="input">
           <p>Liquidity Percent % <app-popover>Percentage of $SOL's filled that will be added to liquidity</app-popover>
           </p>
-          <input type="text" inputmode="numeric" [(ngModel)]="presale.LiquidityPercentage" placeholder="0.00"
+          <input type="text" inputmode="numeric" [(ngModel)]="fairLaunch.LiquidityPercentage" placeholder="0.00"
             (blur)="onCalcTotalTokensForLiquidity()" currencyMask />
         </div>
       </div>
@@ -47,62 +41,35 @@
   </div>
 </div>
 
-<div class="group-content">
-  <div class="content">
-    <div class="group-view">
-      <div class="group-view__title">Initial Market Cap <app-popover>Estimate based on Hard Cap</app-popover></div>
-      <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.Mcap" (blur)="onCalcMcap()"
-        placeholder="0.00" currencyMask [options]="{ precision: 2, decimal: '.', align: 'right', prefix: '$' }"
-        [disabled]="!presale.TotalSupply || !presale.Hardcap || !presale.PresalePrice || !presale.ListingPrice || !presale.LiquidityPercentage" />
-    </div>
-  </div>
-  <div class="content">
-    <div class="group-view">
-      <div class="group-view__title">Price at Launch <app-popover>Estimated price for launch</app-popover></div>
-      <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.SolPricePerToken" placeholder="0.00"
-        currencyMask [options]="{ precision: 2, decimal: '.', align: 'right', prefix: '$' }"
-        (blur)="onCalcChangePriceAtLaunch()"
-        [disabled]="!presale.TotalSupply || !presale.Hardcap || !presale.PresalePrice || !presale.ListingPrice || !presale.LiquidityPercentage" />
-    </div>
+<div class="content">
+  <div class="group-view">
+    <div class="group-view__title">Initial Market Cap <app-popover>Estimate based on Soft Cap</app-popover></div>
+    <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="fairLaunch.Mcap" (blur)="onCalcChangeMcap()"
+      placeholder="0.00" currencyMask [options]="{ precision: 2, decimal: '.', align: 'right', prefix: '$' }"
+      [disabled]="!fairLaunch.TotalSupply || !fairLaunch.TotalTokensForFairLaunch || !fairLaunch.SoftCap || !fairLaunch.LiquidityPercentage" />
   </div>
 </div>
 
 <div class="group-content">
   <div class="check-works">
     <div class="check-works__title">Check if it works or not</div>
-    <div class="check-works__value" [ngClass]="presale.IsWork > 0 ? 'yes' : 'no'">This doesnt work...</div>
+    <div class="check-works__value" [ngClass]="fairLaunch.IsWork > 0 ? 'yes' : 'no'">This doesnt work...</div>
   </div>
   <div class="content">
     <div class="group-view">
       <div class="group-view__title">Percentage you will use of the total supply</div>
       <div class="group-view__value">{{
-        presale.YouWillUseHowManyTotalSupply | number : "1.2-2" }}</div>
+        fairLaunch.YouWillUseHowManyTotalSupply | number : "1.2-2" }}</div>
     </div>
   </div>
 </div>
 
 <div class="content">
-  <img class="tokens-needed-img" src="assets/img/solana-sol-logo.png" loading="lazy" alt="" srcset="">
   <div class="group-view">
-    <div class="group-view__title" style="margin-left: 90px;">Total tokens needed to create a SolPad Pool</div>
-    <div class="group-view__value">{{ formatNumber(presale.TotalTokensNeededOnePercentageSolpad.toLocaleString("en-US"))
+    <div class="group-view__title">Total tokens needed to create a SolPad Pool</div>
+    <div class="group-view__value">{{
+      formatNumber(fairLaunch.TotalTokensNeededOnePercentageSolpad.toLocaleString("en-US"))
       }}</div>
-  </div>
-</div>
-
-<div class="content">
-  <div class="grou-doble">
-    <div class="group-view">
-      <div class="group-view__title" style="margin-left: 90px;">Transfer Fee % <app-popover>Estimated transfer fee +
-          1%</app-popover></div>
-      <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.TransferFee" placeholder="0.00"
-        currencyMask (blur)="onCalcTokensForSolPad()"
-        [disabled]="!presale.TotalSupply || !presale.Hardcap || !presale.PresalePrice || !presale.ListingPrice || !presale.LiquidityPercentage" />
-    </div>
-    <div class="group-view">
-      <div class="group-view__title">Tokens for SolPad</div>
-      <div class="group-view__value">{{ formatNumber(presale.TokensForSolPad.toLocaleString("en-US")) }}</div>
-    </div>
   </div>
 </div>
 
@@ -110,28 +77,14 @@
   <div class="content">
     <div class="group-view">
       <div class="group-view__title">Total Tokens for Presale</div>
-      <div class="group-view__value">{{ formatNumber(presale.TotalTokensForPresale.toLocaleString("en-US")) }}</div>
+      <div class="group-view__value">{{ formatNumber(fairLaunch.TotalTokensForPresale.toLocaleString("en-US")) }}</div>
     </div>
   </div>
-  <div class="content">
-    <div class="group-view">
-      <div class="group-view__title">Soft Cap</div>
-      <div class="group-view__value">{{ formatNumber(presale.SoftCap.toLocaleString("en-US")) }}</div>
-    </div>
-  </div>
-</div>
-
-<div class="group-content">
   <div class="content">
     <div class="group-view">
       <div class="group-view__title">Total Tokens for Liquidity</div>
-      <div class="group-view__value">{{ formatNumber(presale.TotalTokensForLiquidity.toLocaleString("en-US")) }}</div>
-    </div>
-  </div>
-  <div class="content">
-    <div class="group-view">
-      <div class="group-view__title">Token fee</div>
-      <div class="group-view__value">{{ formatNumber(presale.TokenFee.toLocaleString("en-US")) }}</div>
+      <div class="group-view__value">{{ formatNumber(fairLaunch.TotalTokensForLiquidity.toLocaleString("en-US")) }}
+      </div>
     </div>
   </div>
 </div>
@@ -140,15 +93,16 @@
   <div class="content">
     <div class="group-view">
       <div class="group-view__title">Total $SOL going to the Owner Wallet</div>
-      <div class="group-view__value">{{ formatNumber(presale.TotalSolOwnerWallet.toLocaleString("en-US")) }}</div>
+      <div class="group-view__value">{{ formatNumber(fairLaunch.TotalSolOwnerWallet.toLocaleString("en-US")) }}</div>
     </div>
   </div>
   <div class="content">
     <div class="group-view">
       <div class="group-view__title">Total $SOL for liquidity</div>
-      <div class="group-view__value">{{ formatNumber(presale.TotalSolForLiquidity.toLocaleString("en-US")) }}</div>
+      <div class="group-view__value">{{ formatNumber(fairLaunch.TotalSolForLiquidity.toLocaleString("en-US")) }}</div>
     </div>
   </div>
+
 </div>
 
 <div class="title">
@@ -163,12 +117,12 @@
         <div class="input">
           <p>Name</p>
           <input type="text" [(ngModel)]="nameTokenomics" placeholder="Name Tokenomics"
-            [disabled]="!presale.TotalSupply || !presale.Hardcap || !presale.PresalePrice || !presale.ListingPrice || !presale.LiquidityPercentage" />
+            [disabled]="!fairLaunch.TotalSupply || !fairLaunch.TotalTokensForFairLaunch || !fairLaunch.SoftCap || !fairLaunch.LiquidityPercentage" />
         </div>
         <div class="input">
           <p>Value %</p>
           <input currencyMask type="text" inputmode="numeric" [(ngModel)]="valueTokenomics" placeholder="0.00"
-            [disabled]="!presale.TotalSupply || !presale.Hardcap || !presale.PresalePrice || !presale.ListingPrice || !presale.LiquidityPercentage" />
+            [disabled]="!fairLaunch.TotalSupply || !fairLaunch.TotalTokensForFairLaunch || !fairLaunch.SoftCap || !fairLaunch.LiquidityPercentage" />
         </div>
         <button type="button" class="btn-add" [ngClass]="{
             disabled:
@@ -180,7 +134,7 @@
         </button>
       </div>
     </div>
-    <div class="list-tokenomics" *ngFor="let item of presale.ListTokenomics">
+    <div class="list-tokenomics" *ngFor="let item of fairLaunch.ListTokenomics">
       <div class="list-tokenomics__color" [style.backgroundColor]="item.Color"></div>
       <div class="list-tokenomics__name">{{ item.Name }}</div>
       <div class="list-tokenomics__value" *ngIf="!item.IsEditable">
@@ -190,8 +144,8 @@
         <div class="input">
           <input currencyMask [options]="{ align: 'right' }" type="text" inputmode="numeric" [(ngModel)]="item.Value"
             (blur)="onSetValueBlur(item, item.Value)" placeholder="0.00" [disabled]="
-              !presale.LiquidityPercentage ||
-              presale.LiquidityPercentage === 0
+              !fairLaunch.LiquidityPercentage ||
+              fairLaunch.LiquidityPercentage === 0
             " />
         </div>
       </div>
@@ -201,10 +155,9 @@
     </div>
   </div>
   <div class="chart-pie">
-    <div *ngIf="presale.ListTokenomics && presale.ListTokenomics.length > 0" id="chart">
+    <div *ngIf="fairLaunch.ListTokenomics && fairLaunch.ListTokenomics.length > 0" id="chart">
       <apx-chart [tooltip]="chartOptions.tooltip!" [series]="chartOptions.series!" [colors]="chartOptions.colors!"
         [chart]="chartOptions.chart!" [plotOptions]="chartOptions.plotOptions!" [stroke]="chartOptions.stroke!"
         [states]="chartOptions.states!" [labels]="chartOptions.labels!" [legend]="chartOptions.legend!"></apx-chart>
     </div>
   </div>
-</div>

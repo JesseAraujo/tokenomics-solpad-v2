@@ -81,8 +81,6 @@ export class PresaleComponent implements OnInit, OnDestroy {
 
   @ViewChild('chart') chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
-  @ViewChild('chartA') chartA: ChartComponent;
-  public chartOptionsa: Partial<ChartOptions>;
 
   constructor(
     private functionService: FunctionService,
@@ -258,7 +256,7 @@ export class PresaleComponent implements OnInit, OnDestroy {
     this.valueUnloked = 100 - this.presale.YouWillUseHowManyTotalSupply;
 
     this.onCalcSolInToken(this.presale.ListTokenomics);
-    this.a();
+    this.onSetValuesTokenomics();
   }
 
   onGetTotalUnloked(): any {
@@ -376,7 +374,7 @@ export class PresaleComponent implements OnInit, OnDestroy {
       this.nameTokenomics = '';
       this.valueTokenomics = 0;
 
-      this.a();
+      this.onSetValuesTokenomics();
       this.onCalcSolInToken(this.presale.ListTokenomics);
     } else {
       let message =
@@ -400,7 +398,7 @@ export class PresaleComponent implements OnInit, OnDestroy {
 
     this.burned = this.onGetValueBurned();
 
-    this.a();
+    this.onSetValuesTokenomics();
     this.onCalcSolInToken(this.presale.ListTokenomics);
     this.onCalcTotalDollarsInLiquidity();
   }
@@ -416,7 +414,7 @@ export class PresaleComponent implements OnInit, OnDestroy {
     return color;
   }
 
-  a() {
+  onSetValuesTokenomics() {
     let value: number[] = [];
     let color: string[] = [];
     let name: string[] = [];

@@ -51,7 +51,7 @@
   <div class="content">
     <div class="group-view">
       <div class="group-view__title">Initial Market Cap <app-popover>Estimate based on Hard Cap</app-popover></div>
-      <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.Mcap" (blur)="onCalcMcap()"
+      <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.Mcap" (blur)="onCalcChangeMcap()"
         placeholder="0.00" currencyMask [options]="{ precision: 2, decimal: '.', align: 'right', prefix: '$' }"
         [disabled]="!presale.TotalSupply || !presale.Hardcap || !presale.PresalePrice || !presale.ListingPrice || !presale.LiquidityPercentage" />
     </div>
@@ -82,9 +82,8 @@
 </div>
 
 <div class="content">
-  <img class="tokens-needed-img" src="assets/img/solana-sol-logo.png" loading="lazy" alt="" srcset="">
   <div class="group-view">
-    <div class="group-view__title" style="margin-left: 90px;">Total tokens needed to create a SolPad Pool</div>
+    <div class="group-view__title">Total tokens needed to create a SolPad Pool</div>
     <div class="group-view__value">{{ formatNumber(presale.TotalTokensNeededOnePercentageSolpad.toLocaleString("en-US"))
       }}</div>
   </div>
@@ -93,7 +92,7 @@
 <div class="content">
   <div class="grou-doble">
     <div class="group-view">
-      <div class="group-view__title" style="margin-left: 90px;">Transfer Fee % <app-popover>Estimated transfer fee +
+      <div class="group-view__title">Transfer Fee % <app-popover>Estimated transfer fee +
           1%</app-popover></div>
       <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.TransferFee" placeholder="0.00"
         currencyMask (blur)="onCalcTokensForSolPad()"

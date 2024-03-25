@@ -20,7 +20,7 @@ import { CURRENCY_MASK_CONFIG, CurrencyMaskModule } from 'ng2-currency-mask';
 import { Subscription } from 'rxjs';
 import { FunctionService } from 'src/app/core/services/function.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
-import { Presale, Tokenomics } from 'src/app/model/presale';
+import { FairLaunch, Tokenomics } from 'src/app/model/fair-launch';
 import { OnlyNumbersDirective } from 'src/app/shared/directives/only-numbers.directive';
 import { PopoverComponent } from 'src/app/shared/popover/popover.component';
 import { CustomCurrencyMaskConfig } from 'src/main';
@@ -61,29 +61,23 @@ export type ChartOptions = {
     },
   ],
   templateUrl: './fair-launch.component.html',
-  styleUrl: './fair-launch.component.scss',
 })
 export class FairLaunchComponent implements OnInit, OnDestroy {
-  presale: Presale = new Presale();
+  fairLaunch: FairLaunch = new FairLaunch();
   tokenomics: Tokenomics = new Tokenomics();
   subscription: Subscription[] = [];
   solValueApi: number = 0.0;
+  nameTokenomics: string;
+  valueTokenomics: number;
   burned = 0;
   valueUnloked = 0;
   solValueTotal = 0;
   totalDollarsInLiquidity = 0;
-  errorGetTotalUnloked = false;
-
-  nameTokenomics: string;
-  valueTokenomics: number;
   oldMcap: number;
-  oldLprice: number;
-  oldSolPricePerToken: number;
+  oldSoftCap: number;
 
   @ViewChild('chart') chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
-  @ViewChild('chartA') chartA: ChartComponent;
-  public chartOptionsa: Partial<ChartOptions>;
 
   constructor(
     private functionService: FunctionService,
@@ -110,107 +104,88 @@ export class FairLaunchComponent implements OnInit, OnDestroy {
     }
   }
 
-  onCalcTotalTokensForPresale() {
-    this.presale.TotalTokensForPresale =
-      this.presale.PresalePrice * this.presale.Hardcap || 0;
-    this.presale.SoftCap = (this.presale.Hardcap * 25) / 100 || 0;
+  onCalcFairLaunchRate() {
+    if (this.fairLaunch.SoftCap) {
+      this.fairLaunch.FairLaunchRate =
+        this.fairLaunch.TotalTokensForFairLaunch / this.fairLaunch.SoftCap;
+
+      this.oldSoftCap = this.fairLaunch.SoftCap;
+    }
 
     this.onCalcTotalTokensForLiquidity();
   }
 
   onCalcTotalTokensForLiquidity() {
-    if (this.presale.TotalSupply) {
+    if (this.fairLaunch.TotalSupply) {
       if (
-        this.presale.LiquidityPercentage &&
-        this.presale.LiquidityPercentage < 15
+        this.fairLaunch.LiquidityPercentage &&
+        this.fairLaunch.LiquidityPercentage < 15
       ) {
         alert(
           'Error: Liquidity Percent % - Allowed value greater than or equal to 15'
         );
-        this.presale.LiquidityPercentage = 15;
+        this.fairLaunch.LiquidityPercentage = 15;
         this.onCalcTotalTokensForLiquidity();
         return;
       }
 
-      this.presale.TotalTokensForLiquidity =
-        this.presale.Hardcap *
-          0.95 *
-          this.presale.ListingPrice *
-          (this.presale.LiquidityPercentage / 100) || 0;
+      this.fairLaunch.TotalTokensForLiquidity =
+        this.fairLaunch.TotalTokensForFairLaunch *
+        0.95 *
+        (this.fairLaunch.LiquidityPercentage / 100);
 
-      this.presale.TokenFee =
-        this.presale.PresalePrice * this.presale.Hardcap * 0.01 || 0;
-
-      this.oldLprice = this.presale.ListingPrice;
-      this.calcTotalTokensNeeded();
+      this.onCalcTotalTokensNeeded();
     }
   }
 
-  calcTotalTokensNeeded() {
-    this.presale.TotalTokensNeeded =
-      1.02 * (this.presale.PresalePrice * this.presale.Hardcap) +
-        (0.95 *
-          (this.presale.ListingPrice * this.presale.Hardcap) *
-          this.presale.LiquidityPercentage) /
-          100 || 0;
+  onCalcTotalTokensNeeded() {
+    this.fairLaunch.TotalTokensNeededOnePercentageSolpad =
+      1.02 * (this.fairLaunch.FairLaunchRate * this.fairLaunch.SoftCap) +
+      (0.95 *
+        (this.fairLaunch.FairLaunchRate * this.fairLaunch.SoftCap) *
+        this.fairLaunch.LiquidityPercentage) /
+        100;
 
-    this.presale.TotalTokensNeededOnePercentageSolpad =
-      this.presale.TotalTokensNeeded +
-      this.presale.TotalTokensNeeded * (1 / 100);
-
-    this.calcIsWork();
-    this.calcTotalSol();
+    this.onCalcIsWork();
+    this.onCalcTotalSol();
     this.setListTokenomics();
     this.onCalcTotalDollarsInLiquidity();
   }
 
-  onCalcTokensForSolPad() {
-    this.presale.TokensForSolPad =
-      this.presale.TotalTokensNeededOnePercentageSolpad *
-      ((this.presale.TransferFee + 1) / 100);
+  onCalcIsWork() {
+    this.fairLaunch.IsWork =
+      this.fairLaunch.TotalSupply - this.fairLaunch.TotalTokensNeeded;
+    this.fairLaunch.YouWillUseHowManyTotalSupply =
+      (this.fairLaunch.TotalTokensNeeded / this.fairLaunch.TotalSupply) * 100;
   }
 
-  calcIsWork() {
-    this.presale.IsWork =
-      this.presale.TotalSupply - this.presale.TotalTokensNeeded;
-    this.presale.YouWillUseHowManyTotalSupply =
-      (this.presale.TotalTokensNeeded / this.presale.TotalSupply) * 100 || 0;
-  }
+  onCalcTotalSol() {
+    this.fairLaunch.TotalSolOwnerWallet =
+      this.fairLaunch.SoftCap *
+      (1 - this.fairLaunch.LiquidityPercentage / 100) *
+      0.95;
 
-  onCalcSolPricePerToken() {
-    if (this.presale.ListingPrice > 0) {
-      this.presale.SolPricePerToken =
-        this.presale.ListingPrice / this.solValueApi;
-
-      this.oldSolPricePerToken = this.presale.SolPricePerToken;
-    }
-  }
-
-  calcTotalSol() {
-    this.presale.TotalSolOwnerWallet =
-      this.presale.Hardcap *
-        (1 - this.presale.LiquidityPercentage / 100) *
-        0.95 || 0;
-    this.presale.TotalSolForLiquidity =
-      this.presale.Hardcap * (this.presale.LiquidityPercentage / 100) * 0.95 ||
-      0;
+    this.fairLaunch.TotalSolForLiquidity =
+      this.fairLaunch.SoftCap *
+      (this.fairLaunch.LiquidityPercentage / 100) *
+      0.95;
   }
 
   setListTokenomics() {
-    let unlocked = 100 - this.presale.YouWillUseHowManyTotalSupply;
-    let presale =
-      (this.presale.TotalTokensForPresale / this.presale.TotalSupply) * 100 ||
-      0.0;
     let liquidity =
-      this.presale.YouWillUseHowManyTotalSupply -
-        (this.presale.TotalTokensForPresale / this.presale.TotalSupply) * 100 ||
-      0.0;
+      this.fairLaunch.YouWillUseHowManyTotalSupply > 0
+        ? (this.fairLaunch.TotalTokensForLiquidity /
+            this.fairLaunch.TotalSupply) *
+          100
+        : 0;
+    let presale = this.fairLaunch.YouWillUseHowManyTotalSupply - liquidity;
+    this.valueUnloked = 100 - this.fairLaunch.YouWillUseHowManyTotalSupply;
 
     if (
-      !this.presale.ListTokenomics ||
-      this.presale.ListTokenomics.length === 0
+      !this.fairLaunch.ListTokenomics ||
+      this.fairLaunch.ListTokenomics.length === 0
     ) {
-      this.presale.ListTokenomics = [
+      this.fairLaunch.ListTokenomics = [
         {
           Name: 'PreSale',
           Value: presale,
@@ -231,62 +206,55 @@ export class FairLaunchComponent implements OnInit, OnDestroy {
         },
         {
           Name: 'Unlocked',
-          Value: unlocked,
+          Value: this.valueUnloked,
           IsEditable: false,
           Color: '#ffcc56',
         },
       ];
     } else {
-      this.presale.ListTokenomics.filter((n) => n.Name === 'PreSale').map(
+      this.fairLaunch.ListTokenomics.filter((n) => n.Name === 'PreSale').map(
         (element) => {
           element.Value = presale;
         }
       );
 
-      this.presale.ListTokenomics.filter((n) => n.Name === 'Liquidity').map(
+      this.fairLaunch.ListTokenomics.filter((n) => n.Name === 'Liquidity').map(
         (element) => {
           element.Value = liquidity;
         }
       );
 
-      this.presale.ListTokenomics.filter((n) => n.Name === 'Unlocked').map(
+      this.fairLaunch.ListTokenomics.filter((n) => n.Name === 'Unlocked').map(
         (element) => {
           element.Value = this.onGetTotalUnloked();
         }
       );
     }
 
-    this.valueUnloked = 100 - this.presale.YouWillUseHowManyTotalSupply;
-
-    this.onCalcSolInToken(this.presale.ListTokenomics);
-    this.a();
+    this.calcBnbInToken(this.fairLaunch.ListTokenomics);
+    this.onSetValuesTokenomics();
   }
 
   onGetTotalUnloked(): any {
     let total = 0;
     let totalUnloked = 0;
 
-    this.presale.ListTokenomics.forEach((element) => {
+    this.fairLaunch.ListTokenomics.forEach((element) => {
       if (element.Name !== 'Unlocked') {
         total = total + element.Value;
         totalUnloked = 100 - total;
       }
     });
 
-    if (totalUnloked < 0 && !this.errorGetTotalUnloked) {
-      this.errorGetTotalUnloked = true;
-      this.presale.ListTokenomics[2].Value = 0;
+    if (totalUnloked < 0) {
+      this.fairLaunch.ListTokenomics[2].Value = 0;
       let message =
         'Error: Informed value exceeds total allowed. There is only ' +
         this.valueUnloked.toFixed(2) +
         '% available to distribute';
       alert(message);
-
-      this.presale.PresalePrice = 0;
-      this.presale.ListingPrice = 0;
       return this.onGetTotalUnloked();
     } else {
-      this.errorGetTotalUnloked = false;
       this.valueUnloked = totalUnloked;
       return totalUnloked;
     }
@@ -295,56 +263,39 @@ export class FairLaunchComponent implements OnInit, OnDestroy {
   onCalcTotalDollarsInLiquidity() {
     if (
       this.solValueApi > 0 &&
-      this.presale.TotalSupply > 0 &&
-      this.presale.TotalTokensForLiquidity > 0
+      this.fairLaunch.TotalSupply > 0 &&
+      this.fairLaunch.TotalTokensForLiquidity > 0
     ) {
       this.solValueTotal = 1;
       this.totalDollarsInLiquidity =
-        this.presale.TotalSolForLiquidity * this.solValueApi;
+        this.fairLaunch.TotalSolForLiquidity * this.solValueApi;
 
       this.onCalcMcap();
-      this.onCalcSolPricePerToken();
     }
+  }
+
+  onCalcChangeMcap() {
+    this.fairLaunch.SoftCap =
+      (this.oldSoftCap / this.fairLaunch.Mcap) * this.oldMcap;
+
+    this.onCalcFairLaunchRate();
   }
 
   onCalcMcap() {
     let totalSupplyForMacp =
-      this.presale.TotalSupply - this.presale.TotalSupply * (this.burned / 100);
-    this.presale.Mcap =
-      (this.totalDollarsInLiquidity / this.presale.TotalTokensForLiquidity) *
+      this.fairLaunch.TotalSupply -
+      this.fairLaunch.TotalSupply * (this.burned / 100);
+    this.fairLaunch.Mcap =
+      (this.totalDollarsInLiquidity / this.fairLaunch.TotalTokensForLiquidity) *
       totalSupplyForMacp;
 
-    this.oldMcap = this.presale.Mcap;
+    this.oldMcap = this.fairLaunch.Mcap;
   }
 
-  onCalcChangeMcap() {
-    this.presale.ListingPrice =
-      (this.oldLprice / this.presale.Mcap) * this.oldMcap;
-
-    this.presale.PresalePrice = this.presale.ListingPrice;
-
-    this.onCalcTotalTokensForPresale();
-  }
-
-  onCalcChangePriceAtLaunch() {
-    this.presale.ListingPrice =
-      (this.oldLprice / this.presale.SolPricePerToken) *
-      this.oldSolPricePerToken;
-
-    this.presale.PresalePrice = this.presale.ListingPrice;
-
-    this.onCalcTotalTokensForPresale();
-  }
-
-  onGetValueBurned() {
-    return this.presale.ListTokenomics.filter((n) => n.Name === 'Burned')[0]
-      .Value;
-  }
-
-  onCalcSolInToken(listTokenomics: Tokenomics[]) {
-    let valueSolInToken = this.presale.ListingPrice || 0;
+  calcBnbInToken(listTokenomics: Tokenomics[]) {
+    let valueBnbInToken = this.fairLaunch.SoftCap || 0;
     let quantitySol =
-      valueSolInToken === 0 ? 0 : this.presale.TotalSupply / valueSolInToken;
+      valueBnbInToken === 0 ? 0 : this.fairLaunch.TotalSupply / valueBnbInToken;
 
     listTokenomics.forEach((element) => {
       if (quantitySol > 0) {
@@ -355,20 +306,45 @@ export class FairLaunchComponent implements OnInit, OnDestroy {
     });
   }
 
+  onSetValuesTokenomics() {
+    let value: number[] = [];
+    let color: string[] = [];
+    let name: string[] = [];
+
+    this.fairLaunch.ListTokenomics.forEach((ret) => {
+      value.push(ret.Value);
+      color.push(ret.Color);
+      name.push(ret.Name);
+    });
+
+    this.chartCreate(value, color, name);
+  }
+
   formatNumber(a: any) {
     return a.replace(/,/g, ' ');
   }
 
+  onGenerateColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+
+    return color;
+  }
+
   onSetNewTokenomicsClick(nameTokenomics: string, valueTokenomics: number) {
     if (valueTokenomics <= this.valueUnloked) {
-      this.presale.ListTokenomics.push({
+      this.fairLaunch.ListTokenomics.push({
         Name: nameTokenomics,
         Value: valueTokenomics,
         IsEditable: true,
         Color: this.onGenerateColor(),
       });
 
-      this.presale.ListTokenomics.filter((n) => n.Name === 'Unlocked').map(
+      this.fairLaunch.ListTokenomics.filter((n) => n.Name === 'Unlocked').map(
         (element) => {
           element.Value = this.onGetTotalUnloked();
         }
@@ -377,8 +353,8 @@ export class FairLaunchComponent implements OnInit, OnDestroy {
       this.nameTokenomics = '';
       this.valueTokenomics = 0;
 
-      this.a();
-      this.onCalcSolInToken(this.presale.ListTokenomics);
+      this.onSetValuesTokenomics();
+      this.onCalcSolInToken(this.fairLaunch.ListTokenomics);
     } else {
       let message =
         'Error: Informed value exceeds total allowed. There is only ' +
@@ -393,7 +369,7 @@ export class FairLaunchComponent implements OnInit, OnDestroy {
   onSetValueBlur(tokenomics: Tokenomics, value: number) {
     tokenomics.Value = value || 0;
 
-    this.presale.ListTokenomics.filter((n) => n.Name === 'Unlocked').map(
+    this.fairLaunch.ListTokenomics.filter((n) => n.Name === 'Unlocked').map(
       (element) => {
         element.Value = this.onGetTotalUnloked();
       }
@@ -401,34 +377,28 @@ export class FairLaunchComponent implements OnInit, OnDestroy {
 
     this.burned = this.onGetValueBurned();
 
-    this.a();
-    this.onCalcSolInToken(this.presale.ListTokenomics);
+    this.onSetValuesTokenomics();
+    this.onCalcSolInToken(this.fairLaunch.ListTokenomics);
     this.onCalcTotalDollarsInLiquidity();
   }
 
-  onGenerateColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-
-    return color;
+  onGetValueBurned() {
+    return this.fairLaunch.ListTokenomics.filter((n) => n.Name === 'Burned')[0]
+      .Value;
   }
 
-  a() {
-    let value: number[] = [];
-    let color: string[] = [];
-    let name: string[] = [];
+  onCalcSolInToken(listTokenomics: Tokenomics[]) {
+    let valueSolInToken = this.fairLaunch.SoftCap || 0;
+    let quantitySol =
+      valueSolInToken === 0 ? 0 : this.fairLaunch.TotalSupply / valueSolInToken;
 
-    this.presale.ListTokenomics.forEach((ret) => {
-      value.push(ret.Value);
-      color.push(ret.Color);
-      name.push(ret.Name);
+    listTokenomics.forEach((element) => {
+      if (quantitySol > 0) {
+        element.Sol = quantitySol * (element.Value / 100);
+      } else {
+        element.Sol = 0;
+      }
     });
-
-    this.chartCreate(value, color, name);
   }
 
   chartCreate(value: any, color: any, name: any) {
