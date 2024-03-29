@@ -163,8 +163,10 @@ export class PresaleComponent implements OnInit, OnDestroy {
 
   onCalcTokensForSolPad() {
     this.presale.TokensForSolPad =
-      this.presale.TotalTokensNeededOnePercentageSolpad *
-      ((this.presale.TransferFee + 1) / 100);
+      this.presale.TotalTokensNeeded * ((this.presale.TransferFee + 1) / 100);
+
+    this.presale.TotalTokensNeeded =
+      this.presale.TotalTokensNeeded + this.presale.TokensForSolPad;
   }
 
   calcIsWork() {
