@@ -1,13 +1,3 @@
-<div class="group-sol">
-  <img src="assets/img/logo-solano.png" alt="" />
-  <div class="group-sol__sol">
-    $SOL
-    <div class="group-sol__sol--value">
-      ${{solValueApi | number : "1.2-2"}}
-    </div>
-  </div>
-</div>
-
 <div class="content">
   <div class="group-inputs-views">
     <div class="group-input">
@@ -29,7 +19,7 @@
         <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="fairLaunch.SoftCap" placeholder="000 000 000"
           (blur)="onCalcFairLaunchRate()" currencyMask [options]="{ precision: 0, decimal: '', align: 'left' }" />
       </div>
-      <div class="group-input-checkbox">
+      <div class="group-input">
         <div class="input">
           <p>Liquidity Percent % <app-popover>Percentage of $SOL's filled that will be added to liquidity</app-popover>
           </p>
@@ -51,16 +41,16 @@
 </div>
 
 <div class="group-content">
-  <div class="check-works">
-    <div class="check-works__title">Check if it works or not</div>
-    <div class="check-works__value" [ngClass]="fairLaunch.IsWork > 0 ? 'yes' : 'no'">This doesnt work...</div>
-  </div>
   <div class="content">
     <div class="group-view">
       <div class="group-view__title">Percentage you will use of the total supply</div>
       <div class="group-view__value">{{
         fairLaunch.YouWillUseHowManyTotalSupply | number : "1.2-2" }}</div>
     </div>
+  </div>
+  <div class="check-works">
+    <div class="check-works__title">Check if it works or not</div>
+    <div class="check-works__value" [ngClass]="fairLaunch.IsWork > 0 ? 'yes' : 'no'">This doesnt work...</div>
   </div>
 </div>
 
@@ -70,6 +60,22 @@
     <div class="group-view__value">{{
       formatNumber(fairLaunch.TotalTokensNeeded.toLocaleString("en-US"))
       }}</div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="grou-doble">
+    <div class="group-view">
+      <div class="group-view__title">Transfer Fee % <app-popover>Estimated transfer fee +
+          1%</app-popover></div>
+      <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="fairLaunch.TransferFee" placeholder="0.00"
+        currencyMask (blur)="onCalcTokensForSolPad()"
+        [disabled]="!fairLaunch.TotalSupply || !fairLaunch.SoftCap || !fairLaunch.TotalSolForLiquidity ||  !fairLaunch.LiquidityPercentage" />
+    </div>
+    <div class="group-view">
+      <div class="group-view__title">Tokens for SolPad</div>
+      <div class="group-view__value">{{ formatNumber(fairLaunch.TokensForSolPad.toLocaleString("en-US")) }}</div>
+    </div>
   </div>
 </div>
 
@@ -134,23 +140,25 @@
         </button>
       </div>
     </div>
-    <div class="list-tokenomics" *ngFor="let item of fairLaunch.ListTokenomics">
-      <div class="list-tokenomics__color" [style.backgroundColor]="item.Color"></div>
-      <div class="list-tokenomics__name">{{ item.Name }}</div>
-      <div class="list-tokenomics__value" *ngIf="!item.IsEditable">
-        {{ item.Value | number : "1.2-7" }}%
-      </div>
-      <div class="list-tokenomics__value" *ngIf="item.IsEditable">
-        <div class="input">
-          <input currencyMask [options]="{ align: 'right' }" type="text" inputmode="numeric" [(ngModel)]="item.Value"
-            (blur)="onSetValueBlur(item, item.Value)" placeholder="0.00" [disabled]="
+    <div class="content">
+      <div class="list-tokenomics" *ngFor="let item of fairLaunch.ListTokenomics">
+        <div class="list-tokenomics__color" [style.backgroundColor]="item.Color"></div>
+        <div class="list-tokenomics__name">{{ item.Name }}</div>
+        <div class="list-tokenomics__value" *ngIf="!item.IsEditable">
+          {{ item.Value | number : "1.2-7" }}%
+        </div>
+        <div class="list-tokenomics__value" *ngIf="item.IsEditable">
+          <div class="input">
+            <input currencyMask [options]="{ align: 'right' }" type="text" inputmode="numeric" [(ngModel)]="item.Value"
+              (blur)="onSetValueBlur(item, item.Value)" placeholder="0.00" [disabled]="
               !fairLaunch.LiquidityPercentage ||
               fairLaunch.LiquidityPercentage === 0
             " />
+          </div>
         </div>
-      </div>
-      <div class="list-tokenomics__value-sol">
-        {{ formatNumber(item.Sol!.toLocaleString("en-US")) }} $SOL
+        <div class="list-tokenomics__value-sol">
+          {{ formatNumber(item.Sol!.toLocaleString("en-US")) }} $SOL
+        </div>
       </div>
     </div>
   </div>

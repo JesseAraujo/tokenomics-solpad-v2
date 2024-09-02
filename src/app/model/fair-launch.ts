@@ -23,6 +23,9 @@ export class FairLaunch {
   //Initial Market Cap
   Mcap: number;
 
+  //Transfer fee
+  TransferFee: number;
+
   //Token fee
   TokenFee: number;
 
@@ -52,6 +55,7 @@ export class FairLaunch {
     this.TotalTokensForPresale = 0;
     this.TotalTokensForLiquidity = 0;
     this.TotalTokensNeededOnePercentageSolpad = 0;
+    this.TransferFee = 0;
   }
 }
 

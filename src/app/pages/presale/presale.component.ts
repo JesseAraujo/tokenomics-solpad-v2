@@ -179,7 +179,7 @@ export class PresaleComponent implements OnInit, OnDestroy {
   onCalcSolPricePerToken() {
     if (this.presale.ListingPrice > 0) {
       this.presale.SolPricePerToken =
-        this.presale.ListingPrice / this.solValueApi;
+        this.solValueApi / this.presale.ListingPrice;
 
       this.oldSolPricePerToken = this.presale.SolPricePerToken;
     }

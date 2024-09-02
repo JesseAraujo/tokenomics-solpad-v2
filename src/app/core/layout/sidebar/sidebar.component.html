@@ -1,12 +1,21 @@
 <div class="sidebar">
-
   <a href="https://launchpad.solpad.io/" target="_blank">
-    <img loading="lazy" src="assets/img/logoSolpad.svg" alt="SolPad" width="60" />
+    <img loading="lazy" src="assets/img/logo.png" alt="SolPad" width="100" />
   </a>
 
-  <p>
+  <div class="group-sol">
+    <img src="assets/img/logo-solano.png" alt="" />
+    <div class="group-sol__sol">
+      $SOL
+      <div class="group-sol__sol--value">
+        ${{solValueApi | number : "1.2-2"}}
+      </div>
+    </div>
+  </div>
+
+  <!--<p>
     Tokenomics Calculator & Metrics
-  </p>
+  </p>-->
 
   <ul>
     <li [routerLink]="['/presale']" routerLinkActive="router-link-active" [routerLinkActiveOptions]="{exact:

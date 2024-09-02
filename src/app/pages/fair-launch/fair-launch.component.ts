@@ -138,8 +138,21 @@ export class FairLaunchComponent implements OnInit, OnDestroy {
     }
   }
 
+  onCalcTokensForSolPad() {
+    if (this.fairLaunch.TransferFee > 0) {
+      this.fairLaunch.TokensForSolPad =
+        this.fairLaunch.TotalTokensNeeded *
+        ((this.fairLaunch.TransferFee + 1) / 100);
+
+      this.fairLaunch.TotalTokensNeeded =
+        this.fairLaunch.TotalTokensNeeded + this.fairLaunch.TokensForSolPad;
+    } else {
+      this.onCalcTotalTokensForLiquidity();
+    }
+  }
+
   onCalcTotalTokensNeeded() {
-    this.fairLaunch.TotalTokensNeededOnePercentageSolpad =
+    this.fairLaunch.TotalTokensNeeded =
       1.02 * (this.fairLaunch.FairLaunchRate * this.fairLaunch.SoftCap) +
       (0.95 *
         (this.fairLaunch.FairLaunchRate * this.fairLaunch.SoftCap) *
@@ -285,6 +298,7 @@ export class FairLaunchComponent implements OnInit, OnDestroy {
     let totalSupplyForMacp =
       this.fairLaunch.TotalSupply -
       this.fairLaunch.TotalSupply * (this.burned / 100);
+
     this.fairLaunch.Mcap =
       (this.totalDollarsInLiquidity / this.fairLaunch.TotalTokensForLiquidity) *
       totalSupplyForMacp;
