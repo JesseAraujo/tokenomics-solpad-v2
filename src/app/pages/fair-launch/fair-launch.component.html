@@ -1,30 +1,55 @@
-<div class="content">
-  <div class="group-inputs-views">
-    <div class="group-input">
-      <div class="input">
-        <p>Total Supply <app-popover>Total circulating tokens for your project</app-popover></p>
-        <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="fairLaunch.TotalSupply"
-          placeholder="000 000 000" (change)="onCalcTotalTokensForLiquidity()" currencyMask
-          [options]="{ precision: 0, decimal: '', align: 'left' }" />
+<div class="row">
+  <div class="col col-4">
+    <img loading="lazy" src="assets/img/logo.png" alt="SolPad" />
+  </div>
+  <div class="col col-8">
+    <div class="row">
+      <div class="col col-12">
+        <div class="content">
+          <div class="row">
+            <div class="col col-12">
+              <p>Total Supply <app-popover>Total circulating tokens for your project</app-popover></p>
+              <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="fairLaunch.TotalSupply"
+                placeholder="000 000 000" (change)="onCalcTotalTokensForLiquidity()" currencyMask
+                [options]="{ precision: 0, decimal: '', align: 'left' }" />
+            </div>
+            <div class="col col-4">
+              <p> Total Tokens for Fair Launch <app-popover>How many tokens do you want to put up for sale at Fair
+                  Launch?</app-popover></p>
+              <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="fairLaunch.TotalTokensForFairLaunch"
+                placeholder="000 000 000" (blur)="onCalcFairLaunchRate()" currencyMask
+                [options]="{ precision: 0, decimal: '', align: 'left' }" />
+            </div>
+            <div class="col col-4">
+              <p>Soft Cap <app-popover>Minimum value of $SOL filled to develop your project</app-popover></p>
+              <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="fairLaunch.SoftCap"
+                placeholder="000 000 000" (blur)="onCalcFairLaunchRate()" currencyMask
+                [options]="{ precision: 0, decimal: '', align: 'left' }" />
+            </div>
+            <div class="col col-4">
+              <p>Liquidity Percent % <app-popover>Percentage of $SOL's filled that will be added to
+                  liquidity</app-popover>
+              </p>
+              <input type="text" inputmode="numeric" [(ngModel)]="fairLaunch.LiquidityPercentage" placeholder="0.00"
+                (blur)="onCalcTotalTokensForLiquidity()" currencyMask />
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="input">
-        <p> Total Tokens for Fair Launch <app-popover>How many tokens do you want to put up for sale at Fair
-            Launch?</app-popover></p>
-        <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="fairLaunch.TotalTokensForFairLaunch"
-          placeholder="000 000 000" (blur)="onCalcFairLaunchRate()" currencyMask
-          [options]="{ precision: 0, decimal: '', align: 'left' }" />
-      </div>
-      <div class="input">
-        <p>Soft Cap <app-popover>Minimum value of $SOL filled to develop your project</app-popover></p>
-        <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="fairLaunch.SoftCap" placeholder="000 000 000"
-          (blur)="onCalcFairLaunchRate()" currencyMask [options]="{ precision: 0, decimal: '', align: 'left' }" />
-      </div>
-      <div class="group-input">
-        <div class="input">
-          <p>Liquidity Percent % <app-popover>Percentage of $SOL's filled that will be added to liquidity</app-popover>
-          </p>
-          <input type="text" inputmode="numeric" [(ngModel)]="fairLaunch.LiquidityPercentage" placeholder="0.00"
-            (blur)="onCalcTotalTokensForLiquidity()" currencyMask />
+      <div class="col col-12">
+        <div class="content">
+          <div class="row">
+            <div class="col col-6">
+              <div class="group-view__title">Initial Market Cap <app-popover>Estimate based on Soft Cap</app-popover>
+              </div>
+            </div>
+            <div class="col col-6">
+              <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="fairLaunch.Mcap"
+                (blur)="onCalcChangeMcap()" placeholder="0.00" currencyMask
+                [options]="{ precision: 2, decimal: '.', align: 'right', prefix: '$' }"
+                [disabled]="!fairLaunch.TotalSupply || !fairLaunch.TotalTokensForFairLaunch || !fairLaunch.SoftCap || !fairLaunch.LiquidityPercentage" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -33,10 +58,10 @@
 
 <div class="content">
   <div class="group-view">
-    <div class="group-view__title">Initial Market Cap <app-popover>Estimate based on Soft Cap</app-popover></div>
-    <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="fairLaunch.Mcap" (blur)="onCalcChangeMcap()"
-      placeholder="0.00" currencyMask [options]="{ precision: 2, decimal: '.', align: 'right', prefix: '$' }"
-      [disabled]="!fairLaunch.TotalSupply || !fairLaunch.TotalTokensForFairLaunch || !fairLaunch.SoftCap || !fairLaunch.LiquidityPercentage" />
+    <div class="group-view__title">Total tokens needed to create a SolPad Pool</div>
+    <div class="group-view__value">{{
+      formatNumber(fairLaunch.TotalTokensNeeded.toLocaleString("en-US"))
+      }}</div>
   </div>
 </div>
 
@@ -54,14 +79,7 @@
   </div>
 </div>
 
-<div class="content">
-  <div class="group-view">
-    <div class="group-view__title">Total tokens needed to create a SolPad Pool</div>
-    <div class="group-view__value">{{
-      formatNumber(fairLaunch.TotalTokensNeeded.toLocaleString("en-US"))
-      }}</div>
-  </div>
-</div>
+
 
 <div class="content">
   <div class="grou-doble">

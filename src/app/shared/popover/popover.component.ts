@@ -11,6 +11,6 @@ import { FormsModule } from '@angular/forms';
 })
 export class PopoverComponent {
   @Input() linkIcon = 'info-circle';
-  @Input() iconColor = 'rgb(75 246 240)';
+  @Input() iconColor = '#444ccb';
   @Input() linkText: string = '';
 }

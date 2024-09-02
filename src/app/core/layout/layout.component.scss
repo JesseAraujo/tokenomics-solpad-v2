@@ -16,6 +16,7 @@
 
 #page > aside {
   grid-area: aside;
+  position: relative;
 }
 
 #page > main {
@@ -23,6 +24,7 @@
   //height: calc(100vh - 50px);
   overflow-y: auto;
   overflow-x: hidden;
+  background: #fbfbfb;
 
   .main {
     margin: auto;
