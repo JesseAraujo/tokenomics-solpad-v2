@@ -1,58 +1,60 @@
 <div class="content">
-  <div class="group-inputs-views">
-    <div class="group-input">
-      <div class="input">
-        <p>Total Supply <app-popover>Total circulating tokens for your project</app-popover></p>
-        <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.TotalSupply" placeholder="000 000 000"
-          (change)="onCalcTotalTokensForLiquidity()" currencyMask
-          [options]="{ precision: 0, decimal: '', align: 'left' }" />
-      </div>
-      <div class="input">
-        <p>Hard Cap <app-popover>Maximum limit of $SOL filled to develop your project</app-popover></p>
-        <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.Hardcap" placeholder="000 000 000"
-          (blur)="onCalcTotalTokensForPresale()" currencyMask
-          [options]="{ precision: 0, decimal: '', align: 'left' }" />
-      </div>
-      <div class="input">
-        <p>Presale Price <app-popover>Token price in PreSale phase, 1 $SOL = How many tokens</app-popover></p>
-        <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.PresalePrice" placeholder="000 000 000"
-          (blur)="onCalcTotalTokensForPresale()" currencyMask
-          [options]="{ precision: 0, decimal: '', align: 'left' }" />
-      </div>
-      <div class="input">
-        <p>Listing Price <app-popover>Token price at launch, 1 $SOL = How many Token</app-popover></p>
-        <input type="text" OnlyNumbers inputmode="numeric" [(ngModel)]="presale.ListingPrice" placeholder="000 000 000"
-          (blur)="onCalcTotalTokensForLiquidity()" currencyMask
-          [options]="{ precision: 0, decimal: '', align: 'left' }" />
-      </div>
-      <div class="group-input">
-        <div class="input">
-          <p>Liquidity Percent % <app-popover>Percentage of $SOL's filled that will be added to liquidity</app-popover>
-          </p>
-          <input type="text" inputmode="numeric" [(ngModel)]="presale.LiquidityPercentage" placeholder="0.00"
-            (blur)="onCalcTotalTokensForLiquidity()" currencyMask />
-        </div>
-      </div>
+  <div class="row">
+    <div class="col col-3">
+      <p>Total Supply <app-popover>Total circulating tokens for your project</app-popover></p>
+      <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.TotalSupply" placeholder="000 000 000"
+        (change)="onCalcTotalTokensForLiquidity()" currencyMask
+        [options]="{ precision: 0, decimal: '', align: 'left' }" />
+    </div>
+    <div class="col col-3">
+      <p>Hard Cap <app-popover>Maximum limit of $SOL filled to develop your project</app-popover></p>
+      <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.Hardcap" placeholder="000 000 000"
+        (blur)="onCalcTotalTokensForPresale()" currencyMask [options]="{ precision: 0, decimal: '', align: 'left' }" />
+    </div>
+    <div class="col col-3">
+      <p>Presale Price <app-popover>Token price in PreSale phase, 1 $SOL = How many tokens</app-popover></p>
+      <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.PresalePrice" placeholder="000 000 000"
+        (blur)="onCalcTotalTokensForPresale()" currencyMask [options]="{ precision: 0, decimal: '', align: 'left' }" />
+    </div>
+    <div class="col col-3">
+      <p>Listing Price <app-popover>Token price at launch, 1 $SOL = How many Token</app-popover></p>
+      <input type="text" OnlyNumbers inputmode="numeric" [(ngModel)]="presale.ListingPrice" placeholder="000 000 000"
+        (blur)="onCalcTotalTokensForLiquidity()" currencyMask
+        [options]="{ precision: 0, decimal: '', align: 'left' }" />
+    </div>
+    <div class="col col-3">
+      <p>Liquidity Percent % <app-popover>Percentage of $SOL's filled that will be added to liquidity</app-popover>
+      </p>
+      <input type="text" inputmode="numeric" [(ngModel)]="presale.LiquidityPercentage" placeholder="0.00"
+        (blur)="onCalcTotalTokensForLiquidity()" currencyMask />
     </div>
   </div>
 </div>
 
 <div class="group-content">
   <div class="content">
-    <div class="group-view">
-      <div class="group-view__title">Initial Market Cap <app-popover>Estimate based on Hard Cap</app-popover></div>
-      <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.Mcap" (blur)="onCalcChangeMcap()"
-        placeholder="0.00" currencyMask [options]="{ precision: 2, decimal: '.', align: 'right', prefix: '$' }"
-        [disabled]="!presale.TotalSupply || !presale.Hardcap || !presale.PresalePrice || !presale.ListingPrice || !presale.LiquidityPercentage" />
+    <div class="row">
+      <div class="col col-6">
+        <div class="group-view__title">Initial Market Cap <app-popover>Estimate based on Hard Cap</app-popover></div>
+      </div>
+      <div class="col col-6">
+        <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.Mcap" (blur)="onCalcChangeMcap()"
+          placeholder="0.00" currencyMask [options]="{ precision: 2, decimal: '.', align: 'right', prefix: '$' }"
+          [disabled]="!presale.TotalSupply || !presale.Hardcap || !presale.PresalePrice || !presale.ListingPrice || !presale.LiquidityPercentage" />
+      </div>
     </div>
   </div>
   <div class="content">
-    <div class="group-view">
-      <div class="group-view__title">Price at Launch <app-popover>Estimated price for launch</app-popover></div>
-      <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.SolPricePerToken" placeholder="0.00"
-        currencyMask [options]="{ precision: 2, decimal: '.', align: 'right', prefix: '$' }"
-        (blur)="onCalcChangePriceAtLaunch()"
-        [disabled]="!presale.TotalSupply || !presale.Hardcap || !presale.PresalePrice || !presale.ListingPrice || !presale.LiquidityPercentage" />
+    <div class="row">
+      <div class="col col-6">
+        <div class="group-view__title">Price at Launch <app-popover>Estimated price for launch</app-popover></div>
+      </div>
+      <div class="col col-6">
+        <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.SolPricePerToken" placeholder="0.00"
+          currencyMask [options]="{ precision: 2, decimal: '.', align: 'right', prefix: '$' }"
+          (blur)="onCalcChangePriceAtLaunch()"
+          [disabled]="!presale.TotalSupply || !presale.Hardcap || !presale.PresalePrice || !presale.ListingPrice || !presale.LiquidityPercentage" />
+      </div>
     </div>
   </div>
 </div>
