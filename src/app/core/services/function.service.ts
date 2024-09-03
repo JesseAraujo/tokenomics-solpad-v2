@@ -6,8 +6,15 @@ import { Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class FunctionService {
+  //name
+  private cryotoName = new Subject();
+  public cryotoName$ = this.cryotoName.asObservable();
+  //solana
   private cryotoValue = new Subject();
   public cryotoValue$ = this.cryotoValue.asObservable();
+  //tron
+  private cryotoTronValue = new Subject();
+  public cryotoTronValue$ = this.cryotoTronValue.asObservable();
 
   donwloadImage(id: string, name: string) {
     const containerFile = document.getElementById(id)!;
@@ -25,5 +32,13 @@ export class FunctionService {
 
   cryotoValueObservable(value: any) {
     this.cryotoValue.next(value);
+  }
+
+  cryotoTronValueObservable(value: any) {
+    this.cryotoTronValue.next(value);
+  }
+
+  cryotoNameObservable(value: any) {
+    this.cryotoName.next(value);
   }
 }

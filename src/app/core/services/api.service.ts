@@ -26,14 +26,20 @@ export class ApiService {
     return this.http.get<any[]>(this.domain + '/markets');
   }
 
-  getPricesByCrypto(cryptoName: string) {
+  getPriceByCrypto(cryptoName: string) {
     this.wsService
       .connect(`${PRICE_URL}?assets=${cryptoName}`)
       .subscribe((ret) => {
         if (ret) {
           let a = JSON.parse(ret.data);
-          this.functionService.cryotoValueObservable(Number(a.solana));
-          this.localStorageService.setValueSol(a.solana);
+
+          if (cryptoName === 'solana') {
+            this.functionService.cryotoValueObservable(a[cryptoName]);
+            this.localStorageService.setValueSol(a[cryptoName]);
+          } else {
+            this.functionService.cryotoTronValueObservable(a[cryptoName]);
+            this.localStorageService.setValueTron(a[cryptoName]);
+          }
         }
       });
   }

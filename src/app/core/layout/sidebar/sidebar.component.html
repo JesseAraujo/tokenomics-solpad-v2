@@ -1,19 +1,39 @@
 <div class="sidebar">
   <div>
+    <div class="group-btn-coin">
+      <div class="btn-coin" [ngClass]="{'activedSolana' : coinName === 'solana'}" (click)="onSetValueCoin('solana')">
+        <img src="assets/img/solana.png" alt="" />
+      </div>
+      <div class="btn-coin" [ngClass]="{'activedTron' : coinName === 'tron'}" (click)="onSetValueCoin('tron')"><img
+          src="assets/img/{{coinName === 'tron' ? 'tron-white' : 'tron' }}.png" alt="" />
+      </div>
+    </div>
+    <!------->
+    <!------->
     <div class="group-sol">
-      <img src="assets/img/logo-solano.png" alt="" />
+      <img src="assets/img/{{coinName}}.png" alt="" />
       <div class="group-sol__sol">
+        @if(coinName === 'solana' ) {
         $SOL
         <div class="group-sol__sol--value">
           ${{solValueApi | number : "1.2-2"}}
         </div>
+        }@else {
+        $TRX
+        <div class="group-sol__sol--value">
+          ${{tronValueApi | number : "1.6-6"}}
+        </div>
+        }
       </div>
     </div>
-
+    <!------->
+    <!------->
     <p>
       Tokenomics Calculator & Metrics
     </p>
-
+    <!------->
+    <!------->
+    @if(coinName === 'solana') {
     <ul>
       <li [routerLink]="['/presale']" routerLinkActive="router-link-active" [routerLinkActiveOptions]="{exact:
       true}">Presale</li>
@@ -22,6 +42,19 @@
       <li [routerLink]="['/private-sale']" routerLinkActive="router-link-active" [routerLinkActiveOptions]="{exact:
       true}">Private Sale</li>
     </ul>
+    }@else {
+    <ul>
+      <li [routerLink]="['/presale']" routerLinkActive="router-link-active-tron" [routerLinkActiveOptions]="{exact:
+      true}">Presale</li>
+      <li [routerLink]="['/fair-lauch']" routerLinkActive="router-link-active-tron" [routerLinkActiveOptions]="{exact:
+      true}">Fair Launch</li>
+      <li [routerLink]="['/private-sale']" routerLinkActive="router-link-active-tron" [routerLinkActiveOptions]="{exact:
+      true}">Private Sale</li>
+    </ul>
+    }
+    <!------->
+    <!------->
   </div>
-  <a href="https://launchpad.solpad.io/" target="_blank">Go to Launchpad</a>
+  <a [ngClass]="{'link-tron' : coinName === 'tron'}" href="https://launchpad.solpad.io/" target="_blank">Go to
+    Launchpad</a>
 </div>

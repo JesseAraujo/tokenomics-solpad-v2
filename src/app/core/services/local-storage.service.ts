@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class LocalStorageService {
   value_sol = 'value_sol';
+  value_tron = 'value_tron';
 
   constructor() {}
 
@@ -21,10 +22,18 @@ export class LocalStorageService {
   }
 
   setValueSol(value: any) {
-    this.set('value_sol', value);
+    this.set(this.value_sol, value);
   }
 
   getValueSol() {
-    return localStorage.getItem('value_sol');
+    return localStorage.getItem(this.value_sol);
+  }
+
+  setValueTron(value: any) {
+    this.set(this.value_tron, value);
+  }
+
+  getValueTron() {
+    return localStorage.getItem(this.value_tron);
   }
 }

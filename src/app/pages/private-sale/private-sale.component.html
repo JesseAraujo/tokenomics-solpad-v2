@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col col-4">
-    <img loading="lazy" src="assets/img/logo.png" alt="SolPad" />
+    <img loading="lazy" src="assets/img/logo-{{coinName}}.png" alt="{{coinName}}" />
   </div>
   <div class="col col-8">
     <div class="row">
@@ -14,19 +14,20 @@
                 [options]="{ precision: 0, decimal: '', align: 'left' }" />
             </div>
             <div class="col col-4">
-              <p>Hard Cap <app-popover>Maximum limit of $SOL filled to develop your project</app-popover></p>
+              <p>Hard Cap <app-popover>Maximum limit of {{prefix}} filled to develop your project</app-popover></p>
               <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.Hardcap" placeholder="000 000 000"
                 (blur)="onCalcTotalTokensForPresale()" currencyMask
                 [options]="{ precision: 0, decimal: '', align: 'left' }" />
             </div>
             <div class="col col-4">
-              <p>Presale Price <app-popover>Token price in PreSale phase, 1 $SOL = How many tokens</app-popover></p>
+              <p>Presale Price <app-popover>Token price in PreSale phase, 1 {{prefix}} = How many tokens</app-popover>
+              </p>
               <input OnlyNumbers type="text" inputmode="numeric" [(ngModel)]="presale.PresalePrice"
                 placeholder="000 000 000" (blur)="onCalcTotalTokensForPresale()" currencyMask
                 [options]="{ precision: 0, decimal: '', align: 'left' }" />
             </div>
             <div class="col col-4">
-              <p>Liquidity Percent % <app-popover>Percentage of $SOL's filled that will be added to
+              <p>Liquidity Percent % <app-popover>Percentage of {{prefix}}'s filled that will be added to
                   liquidity</app-popover>
               </p>
               <input type="text" inputmode="numeric" [(ngModel)]="presale.LiquidityPercentage" placeholder="0.00"
@@ -115,13 +116,13 @@
 <div class="group-content">
   <div class="content">
     <div class="group-view">
-      <div class="group-view__title">Total $SOL going to the Owner Wallet</div>
+      <div class="group-view__title">Total {{prefix}} going to the Owner Wallet</div>
       <div class="group-view__value">{{ formatNumber(presale.TotalSolOwnerWallet.toLocaleString("en-US")) }}</div>
     </div>
   </div>
   <div class="content">
     <div class="group-view">
-      <div class="group-view__title">Total $SOL for liquidity</div>
+      <div class="group-view__title">Total {{prefix}} for liquidity</div>
       <div class="group-view__value">{{ formatNumber(presale.TotalSolForLiquidity.toLocaleString("en-US")) }}</div>
     </div>
   </div>
@@ -173,7 +174,7 @@
           </div>
         </div>
         <div class="list-tokenomics__value-sol">
-          {{ formatNumber(item.Sol!.toLocaleString("en-US")) }} $SOL
+          {{ formatNumber(item.Sol!.toLocaleString("en-US")) }} {{prefix}}
         </div>
       </div>
     </div>

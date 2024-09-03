@@ -5,15 +5,18 @@ import * as Rx from 'rxjs';
   providedIn: 'root',
 })
 export class WebsocketService {
+  url: string;
   constructor() {}
 
   private subject: Rx.Subject<MessageEvent> | undefined;
 
   public connect(url: any): Rx.Subject<MessageEvent> {
-    if (!this.subject) {
-      this.subject = this.create(url);
-      console.log('Successfully connected: ' + url);
-    }
+    if (url !== this.url) this.subject === null;
+
+    // if (!this.subject) {
+    this.subject = this.create(url);
+    console.log('Successfully connected: ' + url);
+    //}
     return this.subject;
   }
 

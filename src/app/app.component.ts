@@ -12,6 +12,7 @@ export class AppComponent {
   constructor(private apiService: ApiService) {}
 
   ngOnInit() {
-    this.apiService.getPricesByCrypto('solana');
+    //this.apiService.getPriceSolana();
+    //this.apiService.getPriceTron();
   }
 }

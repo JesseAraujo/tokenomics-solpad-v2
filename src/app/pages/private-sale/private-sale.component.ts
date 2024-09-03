@@ -41,6 +41,9 @@ export class PrivateSaleComponent implements OnInit, OnDestroy {
   solValueTotal = 0;
   totalDollarsInLiquidity = 0;
   errorGetTotalUnloked = false;
+  prefix: string = '$SOL';
+  coinName: string = 'solana';
+  tronValueApi: number = 0.0;
 
   nameTokenomics: string;
   valueTokenomics: number;
@@ -61,11 +64,35 @@ export class PrivateSaleComponent implements OnInit, OnDestroy {
         }
       })
     );
+
+    this.subscription.push(
+      this.functionService.cryotoTronValue$.subscribe((ret) => {
+        if (ret) {
+          this.tronValueApi = Number(ret);
+          this.onCalcTotalDollarsInLiquidity();
+        }
+      })
+    );
+
+    this.subscription.push(
+      this.functionService.cryotoName$.subscribe((ret) => {
+        if (ret) {
+          this.coinName = String(ret);
+
+          if (this.coinName === 'solana') {
+            this.prefix = '$SOL';
+          } else {
+            this.prefix = '$TRX';
+          }
+        }
+      })
+    );
   }
 
   ngOnInit() {
     this.setListTokenomics();
     this.solValueApi = Number(this.localStorageService.getValueSol());
+    this.tronValueApi = Number(this.localStorageService.getValueTron());
   }
 
   ngOnDestroy() {
@@ -145,7 +172,7 @@ export class PrivateSaleComponent implements OnInit, OnDestroy {
   onCalcSolPricePerToken() {
     if (this.presale.PresalePrice > 0) {
       this.presale.SolPricePerToken =
-        this.presale.PresalePrice / this.solValueApi;
+        this.presale.PresalePrice / (this.coinName === 'solana' ? this.solValueApi : this.tronValueApi);;
 
       this.oldSolPricePerToken = this.presale.SolPricePerToken;
     }
@@ -259,13 +286,15 @@ export class PrivateSaleComponent implements OnInit, OnDestroy {
 
   onCalcTotalDollarsInLiquidity() {
     if (
-      this.solValueApi > 0 &&
+      (this.coinName === 'solana'
+        ? this.solValueApi > 0
+        : this.tronValueApi > 0) &&
       this.presale.TotalSupply > 0 &&
       this.presale.TotalTokensForLiquidity > 0
     ) {
       this.solValueTotal = 1;
       this.totalDollarsInLiquidity =
-        this.presale.TotalSolForLiquidity * this.solValueApi;
+        this.presale.TotalSolForLiquidity * (this.coinName === 'solana' ? this.solValueApi : this.tronValueApi);;
 
       this.onCalcSolPricePerToken();
     }
