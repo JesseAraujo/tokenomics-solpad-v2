@@ -66,7 +66,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   onSetValueCoin(coinName: string) {
     this.coinName = coinName;
     this.apiService.getPriceByCrypto(coinName);
-
+    this.localStorageService.setCriptoName(coinName);
     this.functionService.cryotoNameObservable(coinName);
   }
 }

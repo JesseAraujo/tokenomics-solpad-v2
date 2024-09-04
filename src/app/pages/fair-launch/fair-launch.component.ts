@@ -114,6 +114,9 @@ export class FairLaunchComponent implements OnInit, OnDestroy {
           } else {
             this.prefix = '$TRX';
           }
+
+          this.getValuesLocalStorage();
+          this.onCalcTotalDollarsInLiquidity();
         }
       })
     );
@@ -121,8 +124,13 @@ export class FairLaunchComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setListTokenomics();
+    this.getValuesLocalStorage();
+  }
+
+  getValuesLocalStorage() {
     this.solValueApi = Number(this.localStorageService.getValueSol());
     this.tronValueApi = Number(this.localStorageService.getValueTron());
+    this.coinName = this.localStorageService.getCriptoName()!;
   }
 
   ngOnDestroy() {

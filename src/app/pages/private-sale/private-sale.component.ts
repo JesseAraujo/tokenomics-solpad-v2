@@ -84,6 +84,9 @@ export class PrivateSaleComponent implements OnInit, OnDestroy {
           } else {
             this.prefix = '$TRX';
           }
+
+          this.getValuesLocalStorage();
+          this.onCalcTotalDollarsInLiquidity();
         }
       })
     );
@@ -91,8 +94,13 @@ export class PrivateSaleComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setListTokenomics();
+    this.getValuesLocalStorage();
+  }
+
+  getValuesLocalStorage() {
     this.solValueApi = Number(this.localStorageService.getValueSol());
     this.tronValueApi = Number(this.localStorageService.getValueTron());
+    this.coinName = this.localStorageService.getCriptoName()!;
   }
 
   ngOnDestroy() {
@@ -172,7 +180,8 @@ export class PrivateSaleComponent implements OnInit, OnDestroy {
   onCalcSolPricePerToken() {
     if (this.presale.PresalePrice > 0) {
       this.presale.SolPricePerToken =
-        this.presale.PresalePrice / (this.coinName === 'solana' ? this.solValueApi : this.tronValueApi);;
+        this.presale.PresalePrice /
+        (this.coinName === 'solana' ? this.solValueApi : this.tronValueApi);
 
       this.oldSolPricePerToken = this.presale.SolPricePerToken;
     }
@@ -294,7 +303,8 @@ export class PrivateSaleComponent implements OnInit, OnDestroy {
     ) {
       this.solValueTotal = 1;
       this.totalDollarsInLiquidity =
-        this.presale.TotalSolForLiquidity * (this.coinName === 'solana' ? this.solValueApi : this.tronValueApi);;
+        this.presale.TotalSolForLiquidity *
+        (this.coinName === 'solana' ? this.solValueApi : this.tronValueApi);
 
       this.onCalcSolPricePerToken();
     }
