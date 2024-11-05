@@ -2,26 +2,34 @@
   <div>
     <div class="group-btn-coin">
       <div class="btn-coin" [ngClass]="{'activedSolana' : coinName === 'solana'}" (click)="onSetValueCoin('solana')">
-        <img src="assets/img/solana.png" alt="" />
+        <img src="assets/img/solana.png" alt="" loading="lazy" />
       </div>
       <div class="btn-coin" [ngClass]="{'activedTron' : coinName === 'tron'}" (click)="onSetValueCoin('tron')"><img
-          src="assets/img/{{coinName === 'tron' ? 'tron-white' : 'tron' }}.png" alt="" />
+          src="assets/img/{{coinName === 'tron' ? 'tron-white' : 'tron' }}.png" alt="" loading="lazy" />
+      </div>
+      <div class="btn-coin" [ngClass]="{'activedBnb' : coinName === 'binance-coin'}"
+        (click)="onSetValueCoin('binance-coin')"><img
+          src="assets/img/{{coinName === 'binance-coin' ? 'logo-bsc-black' : 'logo-bsc' }}.png" alt="" loading="lazy" />
       </div>
     </div>
     <!------->
     <!------->
     <div class="group-sol">
-      <img src="assets/img/{{coinName}}.png" alt="" />
       <div class="group-sol__sol">
         @if(coinName === 'solana' ) {
         $SOL
         <div class="group-sol__sol--value">
           ${{solValueApi | number : "1.2-2"}}
         </div>
-        }@else {
+        }@else if(coinName === 'tron' ) {
         $TRX
         <div class="group-sol__sol--value">
-          ${{tronValueApi | number : "1.6-6"}}
+          ${{tronValueApi | number : "1.4-4"}}
+        </div>
+        }@else {
+        $BNB
+        <div class="group-sol__sol--value">
+          ${{bnbValueApi | number : "1.2-2"}}
         </div>
         }
       </div>
@@ -42,7 +50,7 @@
       <li [routerLink]="['/private-sale']" routerLinkActive="router-link-active" [routerLinkActiveOptions]="{exact:
       true}">Private Sale</li>
     </ul>
-    }@else {
+    }@else if(coinName === 'tron' ){
     <ul>
       <li [routerLink]="['/presale']" routerLinkActive="router-link-active-tron" [routerLinkActiveOptions]="{exact:
       true}">Presale</li>
@@ -51,10 +59,20 @@
       <li [routerLink]="['/private-sale']" routerLinkActive="router-link-active-tron" [routerLinkActiveOptions]="{exact:
       true}">Private Sale</li>
     </ul>
+    }@else {
+    <ul>
+      <li [routerLink]="['/presale']" routerLinkActive="router-link-active-bnb" [routerLinkActiveOptions]="{exact:
+        true}">Presale</li>
+      <li [routerLink]="['/fair-lauch']" routerLinkActive="router-link-active-bnb" [routerLinkActiveOptions]="{exact:
+        true}">Fair Launch</li>
+      <li [routerLink]="['/private-sale']" routerLinkActive="router-link-active-bnb" [routerLinkActiveOptions]="{exact:
+        true}">Private Sale</li>
+    </ul>
     }
     <!------->
     <!------->
   </div>
-  <a [ngClass]="{'link-tron' : coinName === 'tron'}" href="http://sunpad.io/" target="_blank">Go to
+  <a [ngClass]="{'link-tron' : coinName === 'tron', 'link-bnb' : coinName === 'binance-coin'}" href="http://sunpad.io/"
+    target="_blank">Go to
     Launchpad</a>
 </div>

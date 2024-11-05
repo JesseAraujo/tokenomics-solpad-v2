@@ -36,6 +36,7 @@ export class PrivateSaleComponent implements OnInit, OnDestroy {
   tokenomics: Tokenomics = new Tokenomics();
   subscription: Subscription[] = [];
   solValueApi: number = 0.0;
+  bnbValueApi: number = 0.0;
   burned = 0;
   valueUnloked = 0;
   solValueTotal = 0;
@@ -75,14 +76,25 @@ export class PrivateSaleComponent implements OnInit, OnDestroy {
     );
 
     this.subscription.push(
+      this.functionService.cryotoBnbValue$.subscribe((ret) => {
+        if (ret) {
+          this.bnbValueApi = Number(ret);
+          this.onCalcTotalDollarsInLiquidity();
+        }
+      })
+    );
+
+    this.subscription.push(
       this.functionService.cryotoName$.subscribe((ret) => {
         if (ret) {
           this.coinName = String(ret);
 
           if (this.coinName === 'solana') {
             this.prefix = '$SOL';
-          } else {
+          } else if (this.coinName === 'tron') {
             this.prefix = '$TRX';
+          } else if (this.coinName === 'binance-coin') {
+            this.prefix = '$BNB';
           }
 
           this.getValuesLocalStorage();
@@ -100,6 +112,7 @@ export class PrivateSaleComponent implements OnInit, OnDestroy {
   getValuesLocalStorage() {
     this.solValueApi = Number(this.localStorageService.getValueSol());
     this.tronValueApi = Number(this.localStorageService.getValueTron());
+    this.bnbValueApi = Number(this.localStorageService.getValueBnb());
     this.coinName = this.localStorageService.getCriptoName()!;
   }
 
@@ -181,7 +194,11 @@ export class PrivateSaleComponent implements OnInit, OnDestroy {
     if (this.presale.PresalePrice > 0) {
       this.presale.SolPricePerToken =
         this.presale.PresalePrice /
-        (this.coinName === 'solana' ? this.solValueApi : this.tronValueApi);
+        (this.coinName === 'solana'
+          ? this.solValueApi
+          : this.coinName === 'tron'
+          ? this.tronValueApi
+          : this.bnbValueApi);
 
       this.oldSolPricePerToken = this.presale.SolPricePerToken;
     }
@@ -297,14 +314,20 @@ export class PrivateSaleComponent implements OnInit, OnDestroy {
     if (
       (this.coinName === 'solana'
         ? this.solValueApi > 0
-        : this.tronValueApi > 0) &&
+        : this.coinName === 'tron'
+        ? this.tronValueApi > 0
+        : this.bnbValueApi > 0) &&
       this.presale.TotalSupply > 0 &&
       this.presale.TotalTokensForLiquidity > 0
     ) {
       this.solValueTotal = 1;
       this.totalDollarsInLiquidity =
         this.presale.TotalSolForLiquidity *
-        (this.coinName === 'solana' ? this.solValueApi : this.tronValueApi);
+        (this.coinName === 'solana'
+          ? this.solValueApi
+          : this.coinName === 'tron'
+          ? this.tronValueApi
+          : this.bnbValueApi);
 
       this.onCalcSolPricePerToken();
     }

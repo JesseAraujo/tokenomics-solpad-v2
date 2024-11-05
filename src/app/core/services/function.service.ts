@@ -15,6 +15,9 @@ export class FunctionService {
   //tron
   private cryotoTronValue = new Subject();
   public cryotoTronValue$ = this.cryotoTronValue.asObservable();
+  //Bnb
+  private cryotoBnbValue = new Subject();
+  public cryotoBnbValue$ = this.cryotoBnbValue.asObservable();
 
   donwloadImage(id: string, name: string) {
     const containerFile = document.getElementById(id)!;
@@ -36,6 +39,10 @@ export class FunctionService {
 
   cryotoTronValueObservable(value: any) {
     this.cryotoTronValue.next(value);
+  }
+
+  cryotoBnbValueObservable(value: any) {
+    this.cryotoBnbValue.next(value);
   }
 
   cryotoNameObservable(value: any) {

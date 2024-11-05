@@ -24,6 +24,11 @@
     &.link-tron {
       background: rgb(197, 55, 55) !important;
     }
+
+    &.link-bnb {
+      background: rgb(231, 195, 34) !important;
+      color: #202020;
+    }
   }
 
   ul {
@@ -48,6 +53,11 @@
 
       &.router-link-active-tron {
         background: rgb(197, 55, 55) !important;
+      }
+
+      &.router-link-active-bnb {
+        background: rgb(231, 195, 34) !important;
+        color: #202020;
       }
     }
   }
@@ -78,6 +88,11 @@
     &.activedTron {
       background: rgb(197, 55, 55);
       color: #fff;
+    }
+
+    &.activedBnb {
+      background: rgb(240, 203, 40);
+      color: #252525;
     }
   }
 }

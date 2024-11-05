@@ -67,6 +67,7 @@ export class FairLaunchComponent implements OnInit, OnDestroy {
   tokenomics: Tokenomics = new Tokenomics();
   subscription: Subscription[] = [];
   solValueApi: number = 0.0;
+  bnbValueApi: number = 0.0;
   nameTokenomics: string;
   valueTokenomics: number;
   burned = 0;
@@ -105,14 +106,25 @@ export class FairLaunchComponent implements OnInit, OnDestroy {
     );
 
     this.subscription.push(
+      this.functionService.cryotoBnbValue$.subscribe((ret) => {
+        if (ret) {
+          this.bnbValueApi = Number(ret);
+          this.onCalcTotalDollarsInLiquidity();
+        }
+      })
+    );
+
+    this.subscription.push(
       this.functionService.cryotoName$.subscribe((ret) => {
         if (ret) {
           this.coinName = String(ret);
 
           if (this.coinName === 'solana') {
             this.prefix = '$SOL';
-          } else {
+          } else if (this.coinName === 'tron') {
             this.prefix = '$TRX';
+          } else if (this.coinName === 'binance-coin') {
+            this.prefix = '$BNB';
           }
 
           this.getValuesLocalStorage();
@@ -130,6 +142,7 @@ export class FairLaunchComponent implements OnInit, OnDestroy {
   getValuesLocalStorage() {
     this.solValueApi = Number(this.localStorageService.getValueSol());
     this.tronValueApi = Number(this.localStorageService.getValueTron());
+    this.bnbValueApi = Number(this.localStorageService.getValueBnb());
     this.coinName = this.localStorageService.getCriptoName()!;
   }
 
@@ -312,14 +325,20 @@ export class FairLaunchComponent implements OnInit, OnDestroy {
     if (
       (this.coinName === 'solana'
         ? this.solValueApi > 0
-        : this.tronValueApi > 0) &&
+        : this.coinName === 'tron'
+        ? this.tronValueApi > 0
+        : this.bnbValueApi > 0) &&
       this.fairLaunch.TotalSupply > 0 &&
       this.fairLaunch.TotalTokensForLiquidity > 0
     ) {
       this.solValueTotal = 1;
       this.totalDollarsInLiquidity =
         this.fairLaunch.TotalSolForLiquidity *
-        (this.coinName === 'solana' ? this.solValueApi : this.tronValueApi);
+        (this.coinName === 'solana'
+          ? this.solValueApi
+          : this.coinName === 'tron'
+          ? this.tronValueApi
+          : this.bnbValueApi);
 
       this.onCalcMcap();
     }

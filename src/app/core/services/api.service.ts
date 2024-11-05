@@ -30,15 +30,19 @@ export class ApiService {
     this.wsService
       .connect(`${PRICE_URL}?assets=${cryptoName}`)
       .subscribe((ret) => {
+        console.log(ret);
         if (ret) {
           let a = JSON.parse(ret.data);
 
           if (cryptoName === 'solana') {
             this.functionService.cryotoValueObservable(a[cryptoName]);
             this.localStorageService.setValueSol(a[cryptoName]);
-          } else {
+          } else if (cryptoName === 'tron') {
             this.functionService.cryotoTronValueObservable(a[cryptoName]);
             this.localStorageService.setValueTron(a[cryptoName]);
+          } else if (cryptoName === 'binance-coin') {
+            this.functionService.cryotoBnbValueObservable(a[cryptoName]);
+            this.localStorageService.setValueBnb(a[cryptoName]);
           }
         }
       });

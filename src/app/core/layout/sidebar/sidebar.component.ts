@@ -17,6 +17,7 @@ import { LocalStorageService } from '../../services/local-storage.service';
 export class SidebarComponent implements OnInit, OnDestroy {
   solValueApi: number = 0.0;
   tronValueApi: number = 0.0;
+  bnbValueApi: number = 0.0;
   subscription: Subscription[] = [];
   coinName: string = 'solana';
 
@@ -42,6 +43,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
     );
 
     this.subscription.push(
+      this.functionService.cryotoBnbValue$.subscribe((ret) => {
+        if (ret) {
+          this.bnbValueApi = Number(ret);
+        }
+      })
+    );
+
+    this.subscription.push(
       this.functionService.cryotoName$.subscribe((ret) => {
         if (ret) {
           this.coinName = String(ret);
@@ -53,6 +62,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.solValueApi = Number(this.localStorageService.getValueSol());
     this.tronValueApi = Number(this.localStorageService.getValueTron());
+    this.bnbValueApi = Number(this.localStorageService.getValueBnb());
 
     this.onSetValueCoin(this.coinName);
   }

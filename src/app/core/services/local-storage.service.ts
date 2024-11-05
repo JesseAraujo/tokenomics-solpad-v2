@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 export class LocalStorageService {
   value_sol = 'value-sol';
   value_tron = 'value-tron';
+  value_bnb = 'value-bnb';
   cripto_name = 'cripto-name';
 
   constructor() {}
@@ -34,6 +35,7 @@ export class LocalStorageService {
     this.remove(this.value_sol);
   }
 
+  //-----------------------------
   setValueTron(value: any) {
     this.set(this.value_tron, value);
   }
@@ -45,7 +47,20 @@ export class LocalStorageService {
   removeValueTron() {
     this.remove(this.value_tron);
   }
+  //-----------------------------
+  setValueBnb(value: any) {
+    this.set(this.value_bnb, value);
+  }
 
+  getValueBnb() {
+    return localStorage.getItem(this.value_bnb);
+  }
+
+  removeValueBnb() {
+    this.remove(this.value_bnb);
+  }
+
+  //-----------------------------
   setCriptoName(value: any) {
     this.set(this.cripto_name, value);
   }
